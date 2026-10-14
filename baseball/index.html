@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>미니 야구</title>
+<meta name="description" content="회사 몰래 미니게임 2탄 · 설치 없는 64KB 무료 프로그램">
+<meta property="og:title" content="⚾ 회사 몰래 미니게임 2탄 · 야구">
+<meta property="og:description" content="설치 없음 · 64KB · F8 한 번이면 사라짐">
+<style>
+:root{
+  --bg:#F6F7F3; --card:#FFFFFF; --ink:#2F3634; --sub:#6B7470; --line:#E2E6E1;
+  --green:#417C52; --on-green:#FFFFFF; --green-soft:#E6EFE7; --flag:#A65642; --key:#EEF1EC; --warn:#FFF6E5; --warn-ink:#8A5A00;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#161A19; --card:#1F2423; --ink:#E7ECE9; --sub:#9AA39F; --line:#2E3533;
+    --green:#6FB383; --on-green:#0F2418; --green-soft:#22342A; --flag:#D07B66; --key:#2A302E; --warn:#33291A; --warn-ink:#E9B85C;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161A19; --card:#1F2423; --ink:#E7ECE9; --sub:#9AA39F; --line:#2E3533;
+  --green:#6FB383; --on-green:#0F2418; --green-soft:#22342A; --flag:#D07B66; --key:#2A302E; --warn:#33291A; --warn-ink:#E9B85C;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+  line-height:1.6;word-break:keep-all;overflow-wrap:anywhere}
+main{max-width:560px;margin:0 auto;padding:24px 16px 56px}
+.brand{font-size:13px;color:var(--sub);letter-spacing:.02em}
+h1{font-size:28px;line-height:1.3;margin:6px 0 4px}
+.lead{color:var(--sub);margin:0 0 18px}
+section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin:14px 0}
+h2{font-size:17px;margin:0 0 12px}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.stage svg{display:block;width:100%;height:auto}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 0}
+.chip{font-size:12.5px;background:var(--green-soft);color:var(--green);padding:4px 10px;border-radius:99px;font-weight:600}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px 16px;border-radius:12px;
+  background:var(--green);color:var(--on-green);font-weight:700;font-size:16px;text-decoration:none;border:0;cursor:pointer;font-family:inherit}
+.btn.ghost{background:transparent;color:var(--green);border:1.5px solid var(--green);margin-top:8px;font-size:15px;padding:12px}
+.small{font-size:13px;color:var(--sub)}
+.mobile{display:none;background:var(--warn);color:var(--warn-ink);border-color:transparent}
+.mobile.show{display:block}
+.mobile h2{color:var(--warn-ink)}
+.keys{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;align-items:center;margin:0}
+kbd{display:inline-block;min-width:42px;text-align:center;font-family:ui-monospace,Consolas,monospace;font-size:14px;font-weight:700;
+  background:var(--key);border:1px solid var(--line);border-bottom-width:3px;border-radius:8px;padding:4px 8px}
+.keys dd{margin:0}
+.star{color:var(--flag);font-weight:700}
+ol.steps{margin:0;padding-left:20px}
+ol.steps li{margin:4px 0 12px}
+.dialog{border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13px;margin-top:8px;background:var(--bg)}
+.dialog .bar{background:#1F5FA8;color:#fff;padding:8px 12px;font-weight:700}
+.dialog .body{padding:10px 12px;color:var(--sub)}
+.dialog .body u{color:#2B78D0;text-decoration-thickness:2px}
+.dialog .foot{display:flex;justify-content:flex-end;gap:6px;padding:0 12px 10px}
+.dialog .foot span{border:1px solid var(--line);border-radius:4px;padding:3px 14px;color:var(--sub);background:var(--card)}
+.dialog .foot span.hit{border:2px solid #2B78D0;color:#2B78D0;font-weight:700}
+ul.safe{margin:0;padding-left:18px}
+ul.safe li{margin:4px 0}
+.vt{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:var(--green-soft);text-decoration:none;color:var(--ink);margin:12px 0}
+.vt b{font-size:22px;color:var(--green)}
+code.hash{display:block;font-size:11.5px;font-family:ui-monospace,Consolas,monospace;background:var(--key);padding:8px 10px;border-radius:8px;word-break:break-all;margin-top:6px}
+details{border-top:1px solid var(--line);padding:10px 0}
+details:first-of-type{border-top:0;padding-top:0}
+summary{cursor:pointer;font-weight:600}
+details p{margin:6px 0 0;color:var(--sub);font-size:14.5px}
+.next{text-align:center}
+footer{text-align:center;font-size:12px;color:var(--sub);margin-top:20px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+/* 데모 애니메이션: 0~40% 투구, 40% 스윙, 40~85% 타구 */
+@keyframes bat{0%,39%{transform:rotate(0)}41%,52%{transform:rotate(118deg)}60%,100%{transform:rotate(0)}}
+@keyframes ball{0%,86%{opacity:1}92%,100%{opacity:0}}
+@keyframes hr{0%,50%{opacity:0}56%,100%{opacity:1}}
+#g-bat{transform-box:view-box;transform-origin:52px 129px;animation:bat 4s linear infinite}
+#g-ball{animation:ball 4s linear infinite}
+#g-hr{animation:hr 4s ease-out infinite}
+@media (prefers-reduced-motion: reduce){#g-bat,#g-ball,#g-hr{animation:none}#g-hr{opacity:1}}
+</style>
+</head>
+<body>
+<main>
+  <div class="brand" data-brand>딸깍연구소</div>
+  <h1>⚾ 회사 몰래 미니게임 2탄<br>야구</h1>
+  <p class="lead">작업표시줄 위에 숨어 있는 64KB짜리 야구 게임. 누가 오면 <b>F8</b> 한 번.</p>
+
+  <div class="stage" aria-label="게임 화면 예시">
+    <svg viewBox="0 0 300 190" role="img" aria-label="투수가 던진 공을 타이밍 맞춰 쳐서 멀리 보내는 장면">
+      <rect x="0" y="0" width="300" height="190" fill="var(--card)"/>
+      <!-- 가짜 문서 -->
+      <rect x="150" y="14" width="136" height="80" rx="4" fill="none" stroke="var(--line)" stroke-dasharray="4 3"/>
+      <text x="162" y="44" font-size="15" fill="var(--sub)" font-weight="700">제목을 입력…</text>
+      <rect x="162" y="56" width="100" height="5" rx="2" fill="var(--line)"/><rect x="162" y="66" width="80" height="5" rx="2" fill="var(--line)"/>
+      <!-- HUD -->
+      <text x="14" y="22" font-size="8" fill="var(--sub)" font-family="Segoe UI,sans-serif">HIT 7 / 37   Esc exit   F8 hide</text>
+      <text x="14" y="33" font-size="8" fill="var(--sub)" font-family="Segoe UI,sans-serif">DIST 117.5 m   BEST 231.9 m</text>
+      <!-- 지면 -->
+      <line x1="10" y1="152" x2="290" y2="152" stroke="var(--line)" stroke-width="1"/>
+      <!-- 타자 -->
+      <g stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round" fill="none">
+        <circle cx="44" cy="119" r="4.5" fill="var(--ink)" stroke="none"/>
+        <line x1="44" y1="124" x2="42" y2="138"/><line x1="42" y1="138" x2="36" y2="152"/><line x1="42" y1="138" x2="51" y2="152"/>
+        <line x1="44" y1="127" x2="52" y2="129"/>
+        <line id="g-bat" x1="52" y1="129" x2="46" y2="104" stroke="#827453" stroke-width="3"/>
+      </g>
+      <!-- 투수 -->
+      <g stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round" fill="none">
+        <circle cx="200" cy="119" r="4.5" fill="var(--ink)" stroke="none"/>
+        <line x1="200" y1="124" x2="198" y2="138"/><line x1="198" y1="138" x2="192" y2="152"/><line x1="198" y1="138" x2="207" y2="152"/>
+        <line x1="200" y1="127" x2="189" y2="132"/><line x1="200" y1="127" x2="205" y2="136"/>
+      </g>
+      <!-- 공 -->
+      <circle id="g-ball" r="3.5" cx="0" cy="0" fill="var(--ink)">
+        <animateMotion dur="4s" repeatCount="indefinite" path="M188 131 L58 131 Q 150 -40 310 -10" keyPoints="0;0.277;1;1" keyTimes="0;0.4;0.88;1" calcMode="linear"/>
+      </circle>
+      <!-- HOME RUN -->
+      <text id="g-hr" x="150" y="78" text-anchor="middle" font-size="13" font-weight="800" fill="var(--sub)">HOME RUN!</text>
+      <!-- 스윙 버튼 -->
+      <rect x="70" y="164" width="64" height="16" rx="3" fill="var(--green-soft)"/>
+      <text x="102" y="175.5" text-anchor="middle" font-size="8" fill="var(--sub)" font-family="Segoe UI,sans-serif">SWING [X]</text>
+    </svg>
+  </div>
+  <div class="chips"><span class="chip">설치 없음</span><span class="chip">64KB</span><span class="chip">소리 없음</span><span class="chip">투명 배경</span><span class="chip">백신 결과 공개</span></div>
+
+  <section class="mobile" id="mobile">
+    <h2>📱 지금 휴대폰이시죠?</h2>
+    <p style="margin:0 0 12px">이 게임은 <b>Windows PC용</b>이에요. 링크를 PC로 보내서 받아주세요.</p>
+    <button class="btn" id="share">카톡 '나에게 보내기'로 전달</button>
+    <button class="btn ghost" id="copy">링크 복사</button>
+  </section>
+
+  <section>
+    <h2>⬇️ 다운로드</h2>
+    <a class="btn" data-dl="exe" href="#">MiniBaseball.exe 받기 <span class="small" style="color:inherit;opacity:.75">64KB</span></a>
+    <a class="btn ghost" data-dl="zip" href="#">회사망에서 exe가 막히면 → zip으로 받기</a>
+    <p class="small" style="margin:10px 0 0">Windows 10/11 · 64비트 · 관리자 권한 필요 없음</p>
+  </section>
+
+  <section>
+    <h2>🎮 30초 사용법</h2>
+    <dl class="keys">
+      <dt><kbd>X</kbd></dt><dd>공이 배트에 닿는 순간 <b>누르면 스윙</b></dd>
+      <dt><kbd>F8</kbd></dt><dd>숨기기 / 다시 보이기 <span class="star">← 누가 오면 이것!</span></dd>
+      <dt><kbd>F9</kbd></dt><dd>점수 초기화 (최고기록은 유지)</dd>
+      <dt><kbd>Esc</kbd></dt><dd>종료</dd>
+    </dl>
+    <p class="small" style="margin:14px 0 0">타이밍이 정확할수록 멀리 날아가요(최대 약 233m). 너무 빠르거나 늦으면 헛스윙. 최고 비거리(BEST)는 자동 저장돼요.</p>
+  </section>
+
+  <section>
+    <h2>🛡️ 처음 실행할 때 파란 창이 뜨면</h2>
+    <ol class="steps">
+      <li><b>추가 정보</b>를 누르고
+        <div class="dialog" aria-hidden="true">
+          <div class="bar">Windows의 PC 보호</div>
+          <div class="body">Microsoft Defender SmartScreen에서 인식할 수 없는 앱의 시작을 차단했습니다.<br><u>추가 정보</u></div>
+          <div class="foot"><span>실행 안 함</span></div>
+        </div>
+      </li>
+      <li><b>실행</b>을 누르면 끝
+        <div class="dialog" aria-hidden="true">
+          <div class="bar">Windows의 PC 보호</div>
+          <div class="body">앱: MiniBaseball.exe<br>게시자: 알 수 없는 게시자</div>
+          <div class="foot"><span class="hit">실행</span><span>실행 안 함</span></div>
+        </div>
+      </li>
+    </ol>
+    <p class="small" style="margin:0">개인이 만든 무료 프로그램이라 유료 코드 서명이 없어서 뜨는 창이에요. 한 번만 하면 다음부턴 안 떠요.</p>
+  </section>
+
+  <section>
+    <h2>🔒 안심하고 쓰세요</h2>
+    <ul class="safe">
+      <li>인터넷 접속 <b>없음</b></li>
+      <li>자동 실행 등록 <b>없음</b> · 키보드 후킹 <b>없음</b></li>
+      <li>설치 안 함 → exe 지우면 삭제 끝</li>
+    </ul>
+    <a class="vt" href="https://www.virustotal.com/gui/file/92a0c63e1117bc7c828f6ec67a6216056df46ecb7221b4c481c20d3d359bbe4a" target="_blank" rel="noopener">
+      <b data-vt></b><span>백신 <span data-vt-total></span>종 검사 결과 직접 보기 ↗</span>
+    </a>
+    <p class="small" data-vt-note style="margin:0 0 12px">Symantec 1곳이 <b>ML.Attribute.HighConfidence</b>로 표시했어요. 실제 악성코드 이름이 아니라 서명 없는 작은 exe에 자주 붙는 AI 추정 판정이라 오탐 신고를 해 두었어요. V3·알약·Microsoft Defender 등 나머지 70곳은 모두 정상이에요.</p>
+    <div class="small">파일 지문(SHA256) — 받은 파일이 이 값과 같으면 원본이에요.</div>
+    <code class="hash">92A0C63E1117BC7C828F6EC67A6216056DF46ECB7221B4C481C20D3D359BBE4A</code>
+  </section>
+
+  <section>
+    <h2>🙋 자주 묻는 질문</h2>
+    <details><summary>실행했는데 아무것도 안 보여요</summary>
+      <p>주 모니터 <b>왼쪽 아래, 작업표시줄 바로 위</b>에 아주 작게 떠요(그게 포인트). F8을 눌렀다면 한 번 더 누르면 다시 보여요. 골프 등 다른 미니게임이 켜져 있으면 Esc로 끄고 다시 실행해 주세요.</p></details>
+    <details><summary>X를 누르면 문서에 x가 안 써져요</summary>
+      <p>게임이 보이는 동안은 X가 스윙 키예요. <b>F8로 숨기면</b> 다시 정상 입력돼요.</p></details>
+    <details><summary>갑자기 꺼졌어요</summary>
+      <p>Esc는 다른 창에서 눌러도 게임이 꺼져요(엑셀에서 Esc 누를 때 주의). 화면 해상도가 바뀌어도 자동 종료돼요. 다시 실행하면 기록은 그대로 남아 있어요.</p></details>
+    <details><summary>기록까지 완전히 지우고 싶어요</summary>
+      <p>명령 프롬프트에서 <code>reg delete HKCU\Software\MiniDiamond /f</code> 실행 후 exe를 지우면 흔적이 없어요.</p></details>
+    <details><summary>회사 PC에 써도 되나요?</summary>
+      <p>프로그램 자체는 안전하지만, 실행 허용 여부는 회사마다 달라요. <b>사내 보안 규정을 꼭 확인</b>해 주세요.</p></details>
+  </section>
+
+  <section class="next">
+    <h2>💡 아이디어 제보받아요</h2>
+    <p style="margin:0 0 14px">"이런 프로그램 있으면 좋겠다", "이런 미니게임 해보고 싶다"<br>보내주시면 골라서 만들어 무료로 배포해요.</p>
+    <a class="btn" data-mail href="#">✉️ 메일로 자세히 보내기</a>
+    <a class="btn ghost" data-dm href="#">인스타 DM으로 가볍게 보내기</a>
+    <p class="small" style="margin:12px 0 0">메일은 양식이 미리 채워져 있어요. 참고할 화면 캡처나 파일을 첨부해 주시면 더 정확하게 만들 수 있어요.</p>
+    <p class="small" style="margin:6px 0 0">메일 앱이 안 열리면 주소를 복사해서 보내주세요<br><a href="#" id="copymail" style="color:var(--green);font-weight:600;white-space:nowrap"><span data-email></span> 복사</a></p>
+  </section>
+
+  <footer><span data-brand>딸깍연구소</span> · Mini Baseball v1.2</footer>
+</main>
+<div class="toast" id="toast">링크를 복사했어요</div>
+
+<script>
+/* ===== 여기만 바꾸면 됩니다 ===== */
+const CONFIG = {
+  brand:  "딸깍연구소",
+  insta:  "ddalkkak.lab",        // 인스타 아이디 (@ 빼고)
+  email:  "ddalkkakkim@gmail.com",  // 제보 받을 메일
+  github: "ddalkkakkim",         // GitHub 아이디
+  repo:   "mini-games",          // GitHub 저장소 이름
+  tag:    "baseball-v1.2",       // 릴리스 태그
+  exe:    "MiniBaseball.exe",
+  zip:    "MiniBaseball.zip",
+  vt:     "1 / 71"               // ★ VirusTotal 결과. 오탐 해제되어 "0 / 71"이 되면 아래 설명은 자동으로 숨겨짐
+};
+/* ================================ */
+document.querySelectorAll('[data-vt]').forEach(e => e.textContent = CONFIG.vt);
+if (CONFIG.vt.trim().startsWith('0')) document.querySelectorAll('[data-vt-note]').forEach(e => e.hidden = true);
+document.querySelectorAll('[data-vt-total]').forEach(e => e.textContent = CONFIG.vt.split('/')[1].trim());
+const base = `https://github.com/${CONFIG.github}/${CONFIG.repo}/releases/download/${CONFIG.tag}/`;
+document.querySelector('[data-dl="exe"]').href = base + CONFIG.exe;
+document.querySelector('[data-dl="zip"]').href = base + CONFIG.zip;
+document.querySelectorAll('[data-dm]').forEach(a => { a.href = `https://ig.me/m/${CONFIG.insta}`; a.target = "_blank"; a.rel = "noopener"; });
+document.querySelectorAll('[data-brand]').forEach(e => e.textContent = CONFIG.brand);
+document.querySelectorAll('[data-email]').forEach(e => e.textContent = CONFIG.email);
+const mailBody = [
+  "1. 어떤 프로그램 / 미니게임인가요?",
+  "", "",
+  "2. 지금은 어떻게 하고 계세요? (뭐가 귀찮은지)",
+  "", "",
+  "3. 꼭 있었으면 하는 기능",
+  "", "",
+  "4. 참고 화면·파일이 있으면 첨부해 주세요 (회사 기밀은 빼고!)",
+  "", "",
+  "5. 완성되면 알려드릴 인스타 아이디 (선택)",
+  ""
+].join("\n");
+document.querySelector('[data-mail]').href =
+  `mailto:${CONFIG.email}?subject=${encodeURIComponent("[아이디어 제보] ")}&body=${encodeURIComponent(mailBody)}`;
+
+const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
+if (isMobile) document.getElementById('mobile').classList.add('show');
+
+const toast = msg => { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1800); };
+const copyLink = async () => {
+  try { await navigator.clipboard.writeText(location.href); toast('링크를 복사했어요. PC 카톡에 붙여넣으세요'); }
+  catch (e) { prompt('아래 링크를 복사하세요', location.href); }
+};
+document.getElementById('copy').onclick = copyLink;
+document.getElementById('copymail').onclick = async e => {
+  e.preventDefault();
+  try { await navigator.clipboard.writeText(CONFIG.email); toast('메일 주소를 복사했어요'); }
+  catch (err) { prompt('아래 주소를 복사하세요', CONFIG.email); }
+};
+document.getElementById('share').onclick = async () => {
+  if (navigator.share) {
+    try { await navigator.share({ title: '회사 몰래 미니게임 2탄 · 야구', text: 'PC에서 열어서 받기', url: location.href }); } catch (e) {}
+  } else copyLink();
+};
+</script>
+</body>
+</html>
