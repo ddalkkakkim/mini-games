@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>미니 총알피하기</title>
+<meta name="description" content="회사 몰래 미니게임 5탄 · 마우스 커서로 총알 피하기 · 설치 없는 103KB 무료 프로그램">
+<meta property="og:title" content="🎯 회사 몰래 미니게임 5탄 · 총알피하기">
+<meta property="og:description" content="키보드 안 씀 · 커서가 곧 비행기 · 마우스 빼면 바로 일시정지">
+<style>
+:root{
+  --bg:#F6F7F3; --card:#FFFFFF; --ink:#2F3634; --sub:#6B7470; --line:#E2E6E1;
+  --green:#417C52; --on-green:#FFFFFF; --green-soft:#E6EFE7; --flag:#A65642; --key:#EEF1EC; --warn:#FFF6E5; --warn-ink:#8A5A00;
+  --floor:#F1F4F1; --edge:#BEC6C0; --shot:#48524F; --shot-grazed:#9AA39F;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#161A19; --card:#1F2423; --ink:#E7ECE9; --sub:#9AA39F; --line:#2E3533;
+    --green:#6FB383; --on-green:#0F2418; --green-soft:#22342A; --flag:#D07B66; --key:#2A302E; --warn:#33291A; --warn-ink:#E9B85C;
+    --floor:#262C2A; --edge:#3A423F; --shot:#E7ECE9; --shot-grazed:#6B7470;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161A19; --card:#1F2423; --ink:#E7ECE9; --sub:#9AA39F; --line:#2E3533;
+  --green:#6FB383; --on-green:#0F2418; --green-soft:#22342A; --flag:#D07B66; --key:#2A302E; --warn:#33291A; --warn-ink:#E9B85C;
+  --floor:#262C2A; --edge:#3A423F; --shot:#E7ECE9; --shot-grazed:#6B7470;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+  line-height:1.6;word-break:keep-all;overflow-wrap:anywhere}
+main{max-width:560px;margin:0 auto;padding:24px 16px 56px}
+.brand{font-size:13px;color:var(--sub);letter-spacing:.02em}
+h1{font-size:28px;line-height:1.3;margin:6px 0 4px}
+.lead{color:var(--sub);margin:0 0 18px}
+section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin:14px 0}
+h2{font-size:17px;margin:0 0 12px}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.stage canvas{display:block;width:100%;height:auto}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 0}
+.chip{font-size:12.5px;background:var(--green-soft);color:var(--green);padding:4px 10px;border-radius:99px;font-weight:600}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px 16px;border-radius:12px;
+  background:var(--green);color:var(--on-green);font-weight:700;font-size:16px;text-decoration:none;border:0;cursor:pointer;font-family:inherit}
+.btn.ghost{background:transparent;color:var(--green);border:1.5px solid var(--green);margin-top:8px;font-size:15px;padding:12px}
+.small{font-size:13px;color:var(--sub)}
+.mobile{display:none;background:var(--warn);color:var(--warn-ink);border-color:transparent}
+.mobile.show{display:block}
+.mobile h2{color:var(--warn-ink)}
+.keys{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;align-items:center;margin:0}
+kbd{display:inline-block;min-width:42px;text-align:center;font-family:inherit;font-size:13px;font-weight:700;
+  background:var(--key);border:1px solid var(--line);border-bottom-width:3px;border-radius:8px;padding:4px 8px;white-space:nowrap}
+.keys dd{margin:0}
+.star{color:var(--flag);font-weight:700}
+ol.steps{margin:0;padding-left:20px}
+ol.steps li{margin:4px 0 12px}
+.dialog{border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13px;margin-top:8px;background:var(--bg)}
+.dialog .bar{background:#1F5FA8;color:#fff;padding:8px 12px;font-weight:700}
+.dialog .body{padding:10px 12px;color:var(--sub)}
+.dialog .body u{color:#2B78D0;text-decoration-thickness:2px}
+.dialog .foot{display:flex;justify-content:flex-end;gap:6px;padding:0 12px 10px}
+.dialog .foot span{border:1px solid var(--line);border-radius:4px;padding:3px 14px;color:var(--sub);background:var(--card)}
+.dialog .foot span.hit{border:2px solid #2B78D0;color:#2B78D0;font-weight:700}
+ul.safe{margin:0;padding-left:18px}
+ul.safe li{margin:4px 0}
+code.hash{display:block;font-size:11.5px;font-family:ui-monospace,Consolas,monospace;background:var(--key);padding:8px 10px;border-radius:8px;word-break:break-all;margin-top:6px}
+details{border-top:1px solid var(--line);padding:10px 0}
+details:first-of-type{border-top:0;padding-top:0}
+summary{cursor:pointer;font-weight:600}
+details p{margin:6px 0 0;color:var(--sub);font-size:14.5px}
+.next{text-align:center}
+footer{text-align:center;font-size:12px;color:var(--sub);margin-top:20px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<main>
+  <div class="brand" data-brand>딸깍연구소</div>
+  <h1>🎯 회사 몰래 미니게임 5탄<br>총알피하기</h1>
+  <p class="lead">키보드는 안 써요. <b>마우스 커서가 곧 비행기</b>. 누가 오면 마우스만 치우면 바로 일시정지.</p>
+
+  <div class="stage" aria-label="게임 화면 예시">
+    <canvas id="demo" width="600" height="444" role="img" aria-label="회색 상자 안에서 초록 비행기가 사방에서 날아오는 총알을 피하는 장면"></canvas>
+  </div>
+  <div class="chips"><span class="chip">설치 없음</span><span class="chip">103KB</span><span class="chip">키보드 안 씀</span><span class="chip">소리 없음</span><span class="chip">투명 배경</span></div>
+
+  <section class="mobile" id="mobile">
+    <h2>📱 지금 휴대폰이시죠?</h2>
+    <p style="margin:0 0 12px">이 게임은 <b>Windows PC용</b>이에요. 링크를 PC로 보내서 받아주세요.</p>
+    <button class="btn" id="share">카톡 '나에게 보내기'로 전달</button>
+    <button class="btn ghost" id="copy">링크 복사</button>
+  </section>
+
+  <section>
+    <h2>⬇️ 다운로드</h2>
+    <a class="btn" data-dl="exe" href="#">MiniDodge.exe 받기 <span class="small" style="color:inherit;opacity:.75">103KB</span></a>
+    <a class="btn ghost" data-dl="zip" href="#">회사망에서 exe가 막히면 → zip으로 받기</a>
+    <p class="small" style="margin:10px 0 0">Windows 10/11 · 64비트 · 관리자 권한 필요 없음</p>
+  </section>
+
+  <section>
+    <h2>🎮 30초 사용법</h2>
+    <dl class="keys">
+      <dt><kbd>커서 넣기</kbd></dt><dd>왼쪽 아래 회색 상자 안으로 커서를 넣으면 <b>READY 1초 후 시작</b></dd>
+      <dt><kbd>피하기</kbd></dt><dd>상자 네 변에서 총알이 날아와요. 판정은 비행기 <b>가운데 흰 점 하나</b>뿐</dd>
+      <dt><kbd>커서 빼기</kbd></dt><dd>상자 밖으로 나가면 <b>바로 일시정지</b> <span class="star">← 누가 오면 이것!</span></dd>
+      <dt><kbd>초록 링</kbd></dt><dd>멈춘 자리에 뜨는 링에 커서를 다시 올려야 이어져요</dd>
+      <dt><kbd>F8</kbd></dt><dd>숨기기 / 다시 보이기 (플레이 중이면 자동 일시정지)</dd>
+      <dt><kbd>F9</kbd></dt><dd>새 판 (최고기록은 유지)</dd>
+      <dt><kbd>Esc</kbd></dt><dd>종료 (게임 위 오른쪽 클릭도 종료)</dd>
+    </dl>
+    <p class="small" style="margin:14px 0 0">시간이 갈수록 총알이 빨라지고 많아져요. 8초마다 커서를 노리는 5발 부채꼴 탄이 와요. 총알을 아슬아슬하게 스치면 <b>GRAZE</b>가 올라가요. 최고기록(BEST)과 누적 GRAZE는 자동 저장돼요.</p>
+  </section>
+
+  <section>
+    <h2>🛡️ 처음 실행할 때 파란 창이 뜨면</h2>
+    <ol class="steps">
+      <li><b>추가 정보</b>를 누르고
+        <div class="dialog" aria-hidden="true">
+          <div class="bar">Windows의 PC 보호</div>
+          <div class="body">Microsoft Defender SmartScreen에서 인식할 수 없는 앱의 시작을 차단했습니다.<br><u>추가 정보</u></div>
+          <div class="foot"><span>실행 안 함</span></div>
+        </div>
+      </li>
+      <li><b>실행</b>을 누르면 끝
+        <div class="dialog" aria-hidden="true">
+          <div class="bar">Windows의 PC 보호</div>
+          <div class="body">앱: MiniDodge.exe<br>게시자: 알 수 없는 게시자</div>
+          <div class="foot"><span class="hit">실행</span><span>실행 안 함</span></div>
+        </div>
+      </li>
+    </ol>
+    <p class="small" style="margin:0">개인이 만든 무료 프로그램이라 유료 코드 서명이 없어서 뜨는 창이에요. 한 번만 하면 다음부턴 안 떠요.</p>
+  </section>
+
+  <section>
+    <h2>🔒 안심하고 쓰세요</h2>
+    <ul class="safe">
+      <li>인터넷 접속 <b>없음</b></li>
+      <li>자동 실행 등록 <b>없음</b> · 키보드 후킹 <b>없음</b></li>
+      <li>설치 안 함 → exe 지우면 삭제 끝</li>
+    </ul>
+    <div class="small" style="margin-top:12px">파일 지문(SHA256) — 받은 exe가 이 값과 같으면 원본이에요.</div>
+    <code class="hash" data-sha></code>
+  </section>
+
+  <section>
+    <h2>🙋 자주 묻는 질문</h2>
+    <details><summary>실행했는데 아무것도 안 보여요</summary>
+      <p>주 모니터 <b>왼쪽 아래, 작업표시줄 바로 위</b>에 작은 회색 상자로 떠요. F8을 눌렀다면 한 번 더 누르면 다시 보여요. 골프·야구 같은 다른 미니게임이 켜져 있으면 같은 자리에 겹치니 Esc로 끄고 실행해 주세요.</p></details>
+    <details><summary>상자 안에서 마우스 커서가 사라져요</summary>
+      <p>정상이에요. 플레이 중에는 커서 대신 <b>초록 비행기</b>가 보여요. 상자 밖으로 빼면 원래 커서로 돌아와요.</p></details>
+    <details><summary>다시 들어갔는데 게임이 안 이어져요</summary>
+      <p>일시정지하면 멈춘 자리에 <b>초록 동그라미</b>가 생겨요. 커서를 그 동그라미에 올려야 이어져요. (밖으로 나갔다가 안전한 곳으로 순간이동하는 건 막아 뒀어요)</p></details>
+    <details><summary>맞은 뒤 다시 하려면요?</summary>
+      <p>커서를 상자 밖으로 뺐다가 다시 넣으면 새 판이 시작돼요. 상자를 한 번 클릭해도 준비돼요.</p></details>
+    <details><summary>갑자기 꺼졌어요</summary>
+      <p>Esc는 다른 창에서 눌러도 게임이 꺼져요(엑셀에서 Esc 누를 때 주의). 화면 해상도가 바뀌어도 자동 종료돼요. 다시 실행하면 기록은 그대로 남아 있어요.</p></details>
+    <details><summary>기록까지 완전히 지우고 싶어요</summary>
+      <p>명령 프롬프트에서 <code>reg delete HKCU\Software\MiniDodge /f</code> 실행 후 exe를 지우면 흔적이 없어요.</p></details>
+    <details><summary>회사 PC에 써도 되나요?</summary>
+      <p>프로그램 자체는 인터넷을 쓰지 않지만, 실행 허용 여부는 회사마다 달라요. <b>사내 보안 규정을 꼭 확인</b>해 주세요.</p></details>
+  </section>
+
+  <section class="next">
+    <h2>💡 아이디어 제보받아요</h2>
+    <p style="margin:0 0 14px">"이런 프로그램 있으면 좋겠다", "이런 미니게임 해보고 싶다"<br>보내주시면 골라서 만들어 무료로 배포해요.</p>
+    <a class="btn" data-mail href="#">✉️ 메일로 자세히 보내기</a>
+    <a class="btn ghost" data-dm href="#">인스타 DM으로 가볍게 보내기</a>
+    <p class="small" style="margin:12px 0 0">메일은 양식이 미리 채워져 있어요. 참고할 화면 캡처나 파일을 첨부해 주시면 더 정확하게 만들 수 있어요.</p>
+    <p class="small" style="margin:6px 0 0">메일 앱이 안 열리면 주소를 복사해서 보내주세요<br><a href="#" id="copymail" style="color:var(--green);font-weight:600;white-space:nowrap"><span data-email></span> 복사</a></p>
+  </section>
+
+  <footer><span data-brand>딸깍연구소</span> · Mini Dodge v1.0</footer>
+</main>
+<div class="toast" id="toast">링크를 복사했어요</div>
+
+<script>
+/* ===== 여기만 바꾸면 됩니다 ===== */
+const CONFIG = {
+  brand:  "딸깍연구소",
+  insta:  "ddalkkak.lab",        // 인스타 아이디 (@ 빼고)
+  email:  "ddalkkakkim@gmail.com",  // 제보 받을 메일
+  github: "ddalkkakkim",         // GitHub 아이디
+  repo:   "mini-games",          // GitHub 저장소 이름
+  tag:    "dodge-v1.0",          // 릴리스 태그
+  exe:    "MiniDodge.exe",
+  zip:    "MiniDodge.zip",
+  sha256: "4C17A2DF1AF59CDC03C83472ABCB1D9EF135C80BAF43413086C4C3A7BDEF14BB"
+};
+/* ================================ */
+const base = `https://github.com/${CONFIG.github}/${CONFIG.repo}/releases/download/${CONFIG.tag}/`;
+document.querySelector('[data-dl="exe"]').href = base + CONFIG.exe;
+document.querySelector('[data-dl="zip"]').href = base + CONFIG.zip;
+document.querySelectorAll('[data-sha]').forEach(e => e.textContent = CONFIG.sha256);
+document.querySelectorAll('[data-dm]').forEach(a => { a.href = `https://ig.me/m/${CONFIG.insta}`; a.target = "_blank"; a.rel = "noopener"; });
+document.querySelectorAll('[data-brand]').forEach(e => e.textContent = CONFIG.brand);
+document.querySelectorAll('[data-email]').forEach(e => e.textContent = CONFIG.email);
+const mailBody = [
+  "1. 어떤 프로그램 / 미니게임인가요?",
+  "", "",
+  "2. 지금은 어떻게 하고 계세요? (뭐가 귀찮은지)",
+  "", "",
+  "3. 꼭 있었으면 하는 기능",
+  "", "",
+  "4. 참고 화면·파일이 있으면 첨부해 주세요 (회사 기밀은 빼고!)",
+  "", "",
+  "5. 완성되면 알려드릴 인스타 아이디 (선택)",
+  ""
+].join("\n");
+document.querySelector('[data-mail]').href =
+  `mailto:${CONFIG.email}?subject=${encodeURIComponent("[아이디어 제보] ")}&body=${encodeURIComponent(mailBody)}`;
+
+/* 데모 화면: 실제 게임과 같은 280×170 상자, 같은 난이도 곡선. 비행기는 정해진 길을 따라 움직이는 예시(판정 없음) */
+(() => {
+  const cv = document.getElementById('demo'), g = cv.getContext('2d');
+  const S = 2, AX = 10, AY = 46, W = 280, H = 170, LOOP = 14;
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let shots = [], t = 0, next = .3, nextFan = 8, grazes = 0, seed = 7, last = null;
+  const rnd = () => (seed = (seed * 1103515245 + 12345) >>> 0, ((seed >>> 8) & 0xFFFF) / 65536);
+  const speed = t => 70 + Math.min(t / 60, 1) * 100;
+  const gap = t => .40 - Math.min(t / 60, 1) * .29;
+  const plane = t => [W / 2 + Math.sin(t * .9) * 85 + Math.sin(t * 2.3) * 12, H / 2 + Math.sin(t * 1.3 + 1) * 45];
+  const edge = () => { const u = rnd(), s = Math.floor(rnd() * 4);
+    return s === 0 ? [u * W, -3] : s === 1 ? [W + 3, u * H] : s === 2 ? [u * W, H + 3] : [-3, u * H]; };
+  const add = (x, y, a, v) => shots.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, gz: 0 });
+  const reset = () => { shots = []; t = 0; next = .3; nextFan = 8; grazes = 0; };
+  const step = dt => {
+    t += dt; const [cx, cy] = plane(t);
+    while (t >= next) { const [x, y] = edge(); const aim = rnd() < .5;
+      const tx = aim ? cx : W * (.15 + .7 * rnd()), ty = aim ? cy : H * (.15 + .7 * rnd());
+      add(x, y, Math.atan2(ty - y, tx - x) + (rnd() - .5) * .5, speed(t) * (.85 + .3 * rnd())); next += gap(t); }
+    if (t >= nextFan) { const [x, y] = edge(), a = Math.atan2(cy - y, cx - x);
+      for (let k = -2; k <= 2; k++) add(x, y, a + k * .22, speed(t) * .8); nextFan += 8; }
+    shots = shots.filter(s => { s.x += s.vx * dt; s.y += s.vy * dt;
+      if (!s.gz && Math.hypot(s.x - cx, s.y - cy) < 12) { s.gz = 1; grazes++; }
+      return s.x > -20 && s.x < W + 20 && s.y > -20 && s.y < H + 20; });
+    if (t > LOOP) warm();
+  };
+  /* 빈 상자로 시작하지 않게 3초 진행된 상태부터 보여 준다 */
+  const warm = () => { reset(); for (let i = 0; i < 180; i++) step(1 / 60); };
+  const dot = (x, y, r, c) => { g.fillStyle = c; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); };
+  const draw = () => {
+    const ink = css('--shot'), sub = css('--sub'), green = css('--green');
+    g.setTransform(S, 0, 0, S, 0, 0);
+    g.fillStyle = css('--card'); g.fillRect(0, 0, cv.width / S, cv.height / S);
+    g.fillStyle = sub; g.font = '9px "Segoe UI",system-ui,sans-serif';
+    g.fillText(`DODGE   TIME ${t.toFixed(2)} s   BEST 47.36 s`, AX, 14);
+    g.fillText(`GRAZE ${grazes}   TOTAL GRAZE 1284`, AX, 26);
+    g.fillText('Dodge!  Leaving the box pauses the game', AX, 38);
+    g.fillStyle = css('--floor'); g.fillRect(AX, AY, W, H);
+    g.strokeStyle = css('--edge'); g.lineWidth = 1; g.strokeRect(AX - .5, AY - .5, W + 1, H + 1);
+    g.save(); g.beginPath(); g.rect(AX, AY, W, H); g.clip();
+    for (const s of shots) { dot(AX + s.x, AY + s.y, 3, s.gz ? css('--shot-grazed') : ink); dot(AX + s.x - 1, AY + s.y - 1, .9, css('--floor')); }
+    const [cx, cy] = plane(t), x = AX + cx, y = AY + cy;
+    g.strokeStyle = green; g.lineWidth = 2; g.lineJoin = 'round';
+    g.beginPath(); g.moveTo(x, y - 8); g.lineTo(x + 6, y + 5); g.lineTo(x - 6, y + 5); g.closePath(); g.stroke();
+    dot(x, y, 2, css('--floor')); g.strokeStyle = ink; g.lineWidth = 1; g.beginPath(); g.arc(x, y, 2, 0, 7); g.stroke();
+    g.restore();
+  };
+  if (still) { for (let i = 0; i < 600; i++) step(1 / 60); draw(); return; }
+  warm();
+  const loop = ts => { if (last !== null) step(Math.min((ts - last) / 1000, .1)); last = ts; draw(); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+})();
+
+const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
+if (isMobile) document.getElementById('mobile').classList.add('show');
+
+const toast = msg => { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1800); };
+const copyLink = async () => {
+  try { await navigator.clipboard.writeText(location.href); toast('링크를 복사했어요. PC 카톡에 붙여넣으세요'); }
+  catch (e) { prompt('아래 링크를 복사하세요', location.href); }
+};
+document.getElementById('copy').onclick = copyLink;
+document.getElementById('copymail').onclick = async e => {
+  e.preventDefault();
+  try { await navigator.clipboard.writeText(CONFIG.email); toast('메일 주소를 복사했어요'); }
+  catch (err) { prompt('아래 주소를 복사하세요', CONFIG.email); }
+};
+document.getElementById('share').onclick = async () => {
+  if (navigator.share) {
+    try { await navigator.share({ title: '회사 몰래 미니게임 5탄 · 총알피하기', text: 'PC에서 열어서 받기', url: location.href }); } catch (e) {}
+  } else copyLink();
+};
+</script>
+</body>
+</html>
