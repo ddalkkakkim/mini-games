@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>미니 헬리콥터</title>
+<meta name="description" content="회사 몰래 미니게임 6탄 · X 하나로 하는 동굴 비행 · 설치 없는 119KB 무료 프로그램">
+<meta property="og:title" content="🚁 회사 몰래 미니게임 6탄 · 헬리콥터">
+<meta property="og:description" content="누르면 올라가고 떼면 떨어지고 · 누가 오면 F8 → 그 자리에서 멈춤">
+<style>
+:root{
+  --bg:#F6F7F3; --card:#FFFFFF; --ink:#2F3634; --sub:#6B7470; --line:#E2E6E1;
+  --green:#417C52; --on-green:#FFFFFF; --green-soft:#E6EFE7; --flag:#A65642; --key:#EEF1EC; --warn:#FFF6E5; --warn-ink:#8A5A00;
+  --floor:#F1F4F1; --edge:#BEC6C0; --rock:#8C9E91; --block:#68746E; --block-top:#96A29B; --trail:#C4CBC6;
+  --heli:#48524F; --glass:#CEE0D6; --skid:#828C87; --btn:#E6EDE6; --btn-on:#CCDAD0; --spark:#9DA49F;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#161A19; --card:#1F2423; --ink:#E7ECE9; --sub:#9AA39F; --line:#2E3533;
+    --green:#6FB383; --on-green:#0F2418; --green-soft:#22342A; --flag:#D07B66; --key:#2A302E; --warn:#33291A; --warn-ink:#E9B85C;
+    --floor:#262C2A; --edge:#3A423F; --rock:#4A5A50; --block:#8A968F; --block-top:#B3BDB7; --trail:#46504C;
+    --heli:#E7ECE9; --glass:#5E7F6C; --skid:#8A948F; --btn:#2E3533; --btn-on:#3E5446; --spark:#7C8581;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161A19; --card:#1F2423; --ink:#E7ECE9; --sub:#9AA39F; --line:#2E3533;
+  --green:#6FB383; --on-green:#0F2418; --green-soft:#22342A; --flag:#D07B66; --key:#2A302E; --warn:#33291A; --warn-ink:#E9B85C;
+  --floor:#262C2A; --edge:#3A423F; --rock:#4A5A50; --block:#8A968F; --block-top:#B3BDB7; --trail:#46504C;
+  --heli:#E7ECE9; --glass:#5E7F6C; --skid:#8A948F; --btn:#2E3533; --btn-on:#3E5446; --spark:#7C8581;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+  line-height:1.6;word-break:keep-all;overflow-wrap:anywhere}
+main{max-width:560px;margin:0 auto;padding:24px 16px 56px}
+.brand{font-size:13px;color:var(--sub);letter-spacing:.02em}
+h1{font-size:28px;line-height:1.3;margin:6px 0 4px}
+.lead{color:var(--sub);margin:0 0 18px}
+section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin:14px 0}
+h2{font-size:17px;margin:0 0 12px}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.stage canvas{display:block;width:100%;height:auto}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 0}
+.chip{font-size:12.5px;background:var(--green-soft);color:var(--green);padding:4px 10px;border-radius:99px;font-weight:600}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px 16px;border-radius:12px;
+  background:var(--green);color:var(--on-green);font-weight:700;font-size:16px;text-decoration:none;border:0;cursor:pointer;font-family:inherit}
+.btn.ghost{background:transparent;color:var(--green);border:1.5px solid var(--green);margin-top:8px;font-size:15px;padding:12px}
+.small{font-size:13px;color:var(--sub)}
+.mobile{display:none;background:var(--warn);color:var(--warn-ink);border-color:transparent}
+.mobile.show{display:block}
+.mobile h2{color:var(--warn-ink)}
+.keys{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;align-items:center;margin:0}
+kbd{display:inline-block;min-width:42px;text-align:center;font-family:inherit;font-size:13px;font-weight:700;
+  background:var(--key);border:1px solid var(--line);border-bottom-width:3px;border-radius:8px;padding:4px 8px;white-space:nowrap}
+.keys dd{margin:0}
+.star{color:var(--flag);font-weight:700}
+.note{background:var(--key);border-radius:10px;padding:10px 12px;margin:14px 0 0;font-size:13.5px}
+ol.steps{margin:0;padding-left:20px}
+ol.steps li{margin:4px 0 12px}
+.dialog{border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13px;margin-top:8px;background:var(--bg)}
+.dialog .bar{background:#1F5FA8;color:#fff;padding:8px 12px;font-weight:700}
+.dialog .body{padding:10px 12px;color:var(--sub)}
+.dialog .body u{color:#2B78D0;text-decoration-thickness:2px}
+.dialog .foot{display:flex;justify-content:flex-end;gap:6px;padding:0 12px 10px}
+.dialog .foot span{border:1px solid var(--line);border-radius:4px;padding:3px 14px;color:var(--sub);background:var(--card)}
+.dialog .foot span.hit{border:2px solid #2B78D0;color:#2B78D0;font-weight:700}
+ul.safe{margin:0;padding-left:18px}
+ul.safe li{margin:4px 0}
+code.hash{display:block;font-size:11.5px;font-family:ui-monospace,Consolas,monospace;background:var(--key);padding:8px 10px;border-radius:8px;word-break:break-all;margin-top:6px}
+details{border-top:1px solid var(--line);padding:10px 0}
+details:first-of-type{border-top:0;padding-top:0}
+summary{cursor:pointer;font-weight:600}
+details p{margin:6px 0 0;color:var(--sub);font-size:14.5px}
+.next{text-align:center}
+footer{text-align:center;font-size:12px;color:var(--sub);margin-top:20px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<main>
+  <div class="brand" data-brand>딸깍연구소</div>
+  <h1>🚁 회사 몰래 미니게임 6탄<br>헬리콥터</h1>
+  <p class="lead">그 시절 플래시 헬리콥터 게임. <b>X 누르면 올라가고, 떼면 떨어지고.</b> 누가 오면 F8 한 번이면 그 자리에서 멈춰요.</p>
+
+  <div class="stage" aria-label="게임 화면 예시">
+    <canvas id="demo" width="680" height="448" role="img" aria-label="가로로 긴 동굴 속을 헬리콥터가 천장과 바닥, 가운데 블록을 피해 날아가는 장면"></canvas>
+  </div>
+  <div class="chips"><span class="chip">설치 없음</span><span class="chip">119KB</span><span class="chip">버튼 하나(X)</span><span class="chip">소리 없음</span><span class="chip">투명 배경</span></div>
+
+  <section class="mobile" id="mobile">
+    <h2>📱 지금 휴대폰이시죠?</h2>
+    <p style="margin:0 0 12px">이 게임은 <b>Windows PC용</b>이에요. 링크를 PC로 보내서 받아주세요.</p>
+    <button class="btn" id="share">카톡 '나에게 보내기'로 전달</button>
+    <button class="btn ghost" id="copy">링크 복사</button>
+  </section>
+
+  <section>
+    <h2>⬇️ 다운로드</h2>
+    <a class="btn" data-dl="exe" href="#">MiniCopter.exe 받기 <span class="small" style="color:inherit;opacity:.75">119KB</span></a>
+    <a class="btn ghost" data-dl="zip" href="#">회사망에서 exe가 막히면 → zip으로 받기</a>
+    <p class="small" style="margin:10px 0 0">Windows 10/11 · 64비트 · 관리자 권한 필요 없음</p>
+  </section>
+
+  <section>
+    <h2>🎮 30초 사용법</h2>
+    <dl class="keys">
+      <dt><kbd>X 누르기</kbd></dt><dd>누르고 있으면 <b>위로</b>, 떼면 <b>아래로</b>. 대기 화면에서 누르면 바로 출발</dd>
+      <dt><kbd>짧게 톡톡</kbd></dt><dd>관성이 있어서 바로 안 멈춰요. <b>끊어 누르며 높이 맞추기</b>가 요령</dd>
+      <dt><kbd>HOLD [X]</kbd></dt><dd>상자 아래 버튼을 마우스로 누르고 있어도 돼요</dd>
+      <dt><kbd>F8</kbd></dt><dd>숨기기 / 다시 보이기 <span class="star">← 누가 오면 이것!</span> 숨기는 순간 그 자리에서 멈춰요</dd>
+      <dt><kbd>F9</kbd></dt><dd>새 판 (최고기록은 유지)</dd>
+      <dt><kbd>Esc</kbd></dt><dd>종료 (게임 위 오른쪽 클릭도 종료)</dd>
+    </dl>
+    <p class="small" style="margin:14px 0 0">천장·바닥·가운데 떠 있는 블록에 닿으면 끝. 처음 40m는 곧은 길이고, 갈수록 통로가 좁아지고 빨라져요. 판정은 <b>헬리콥터 몸통만</b> 봐요(꼬리·프로펠러는 닿아도 괜찮아요). 모든 동굴은 항상 빠져나갈 수 있게 만들어져요. 최고 거리(BEST)와 판 수(PLAYS)는 자동 저장돼요.</p>
+    <p class="note">⌨️ 게임이 <b>보이는 동안엔 X 키를 게임이 써요.</b> 엑셀에 X를 쳐야 하면 F8로 숨기세요. 숨기면 X는 원래대로 글자가 입력돼요.</p>
+  </section>
+
+  <section>
+    <h2>🛡️ 처음 실행할 때 파란 창이 뜨면</h2>
+    <ol class="steps">
+      <li><b>추가 정보</b>를 누르고
+        <div class="dialog" aria-hidden="true">
+          <div class="bar">Windows의 PC 보호</div>
+          <div class="body">Microsoft Defender SmartScreen에서 인식할 수 없는 앱의 시작을 차단했습니다.<br><u>추가 정보</u></div>
+          <div class="foot"><span>실행 안 함</span></div>
+        </div>
+      </li>
+      <li><b>실행</b>을 누르면 끝
+        <div class="dialog" aria-hidden="true">
+          <div class="bar">Windows의 PC 보호</div>
+          <div class="body">앱: MiniCopter.exe<br>게시자: 알 수 없는 게시자</div>
+          <div class="foot"><span class="hit">실행</span><span>실행 안 함</span></div>
+        </div>
+      </li>
+    </ol>
+    <p class="small" style="margin:0">개인이 만든 무료 프로그램이라 유료 코드 서명이 없어서 뜨는 창이에요. 한 번만 하면 다음부턴 안 떠요.</p>
+  </section>
+
+  <section>
+    <h2>🔒 안심하고 쓰세요</h2>
+    <ul class="safe">
+      <li>인터넷 접속 <b>없음</b></li>
+      <li>자동 실행 등록 <b>없음</b> · 키보드 후킹 <b>없음</b></li>
+      <li>설치 안 함 → exe 지우면 삭제 끝</li>
+    </ul>
+    <div class="small" style="margin-top:12px">파일 지문(SHA256) — 받은 exe가 이 값과 같으면 원본이에요.</div>
+    <code class="hash" data-sha></code>
+  </section>
+
+  <section>
+    <h2>🙋 자주 묻는 질문</h2>
+    <details><summary>실행했는데 아무것도 안 보여요</summary>
+      <p>주 모니터 <b>왼쪽 아래, 작업표시줄 바로 위</b>에 가로로 긴 동굴 상자로 떠요. F8을 눌렀다면 한 번 더 누르면 다시 보여요. 골프·야구·총알피하기 같은 다른 미니게임이 켜져 있으면 같은 자리에 겹치니 Esc로 끄고 실행해 주세요.</p></details>
+    <details><summary>엑셀에서 X가 안 쳐져요</summary>
+      <p>게임이 보이는 동안엔 X 키를 게임이 받아요. <b>F8로 숨기면</b> 바로 원래대로 입력돼요. 다시 하려면 F8 한 번 더.</p></details>
+    <details><summary>너무 금방 떨어져요</summary>
+      <p>아무것도 안 누르면 0.5초쯤이면 바닥에 닿아요. 꾹 누르고 있기보다 <b>짧게 톡톡 끊어 누르기</b>가 훨씬 쉬워요. 올라가는 힘과 떨어지는 힘이 똑같아서 누른 시간과 뗀 시간을 반반으로 맞추면 수평으로 날아요.</p></details>
+    <details><summary>F8로 다시 보이게 했는데 안 움직여요</summary>
+      <p>정상이에요. 다시 보이면 <b>PAUSED</b>로 기다려요(보이자마자 떨어져서 억울하게 끝나지 않게). X를 새로 누르면 이어져요.</p></details>
+    <details><summary>부딪힌 뒤 X를 눌러도 다시 안 돼요</summary>
+      <p>부딪히고 <b>0.8초</b> 뒤부터 다시 출발할 수 있어요. X를 누른 채로 부딪혔다면 한 번 뗐다가 다시 눌러 주세요. (실수로 바로 출발하지 않게 막아 뒀어요)</p></details>
+    <details><summary>갑자기 꺼졌어요</summary>
+      <p>Esc는 다른 창에서 눌러도 게임이 꺼져요(엑셀에서 Esc 누를 때 주의). 화면 해상도가 바뀌어도 자동 종료돼요. 다시 실행하면 기록은 그대로 남아 있어요.</p></details>
+    <details><summary>기록까지 완전히 지우고 싶어요</summary>
+      <p>명령 프롬프트에서 <code>reg delete HKCU\Software\MiniCopter /f</code> 실행 후 exe를 지우면 흔적이 없어요.</p></details>
+    <details><summary>회사 PC에 써도 되나요?</summary>
+      <p>프로그램 자체는 인터넷을 쓰지 않지만, 실행 허용 여부는 회사마다 달라요. <b>사내 보안 규정을 꼭 확인</b>해 주세요.</p></details>
+  </section>
+
+  <section class="next">
+    <h2>💡 아이디어 제보받아요</h2>
+    <p style="margin:0 0 14px">"이런 프로그램 있으면 좋겠다", "이런 미니게임 해보고 싶다"<br>보내주시면 골라서 만들어 무료로 배포해요.</p>
+    <a class="btn" data-mail href="#">✉️ 메일로 자세히 보내기</a>
+    <a class="btn ghost" data-dm href="#">인스타 DM으로 가볍게 보내기</a>
+    <p class="small" style="margin:12px 0 0">메일은 양식이 미리 채워져 있어요. 참고할 화면 캡처나 파일을 첨부해 주시면 더 정확하게 만들 수 있어요.</p>
+    <p class="small" style="margin:6px 0 0">메일 앱이 안 열리면 주소를 복사해서 보내주세요<br><a href="#" id="copymail" style="color:var(--green);font-weight:600;white-space:nowrap"><span data-email></span> 복사</a></p>
+  </section>
+
+  <footer><span data-brand>딸깍연구소</span> · Mini Copter v1.0</footer>
+</main>
+<div class="toast" id="toast">링크를 복사했어요</div>
+
+<script>
+/* ===== 여기만 바꾸면 됩니다 ===== */
+const CONFIG = {
+  brand:  "딸깍연구소",
+  insta:  "ddalkkak.lab",        // 인스타 아이디 (@ 빼고)
+  email:  "ddalkkakkim@gmail.com",  // 제보 받을 메일
+  github: "ddalkkakkim",         // GitHub 아이디
+  repo:   "mini-games",          // GitHub 저장소 이름
+  tag:    "copter-v1.0",         // 릴리스 태그
+  exe:    "MiniCopter.exe",
+  zip:    "MiniCopter.zip",
+  sha256: "25D5DCAA808B9A72D9A19DB659D4E0D8209245F67D2647B26CF901B1C7834734"
+};
+/* ================================ */
+const base = `https://github.com/${CONFIG.github}/${CONFIG.repo}/releases/download/${CONFIG.tag}/`;
+document.querySelector('[data-dl="exe"]').href = base + CONFIG.exe;
+document.querySelector('[data-dl="zip"]').href = base + CONFIG.zip;
+document.querySelectorAll('[data-sha]').forEach(e => e.textContent = CONFIG.sha256);
+document.querySelectorAll('[data-dm]').forEach(a => { a.href = `https://ig.me/m/${CONFIG.insta}`; a.target = "_blank"; a.rel = "noopener"; });
+document.querySelectorAll('[data-brand]').forEach(e => e.textContent = CONFIG.brand);
+document.querySelectorAll('[data-email]').forEach(e => e.textContent = CONFIG.email);
+const mailBody = [
+  "1. 어떤 프로그램 / 미니게임인가요?",
+  "", "",
+  "2. 지금은 어떻게 하고 계세요? (뭐가 귀찮은지)",
+  "", "",
+  "3. 꼭 있었으면 하는 기능",
+  "", "",
+  "4. 참고 화면·파일이 있으면 첨부해 주세요 (회사 기밀은 빼고!)",
+  "", "",
+  "5. 완성되면 알려드릴 인스타 아이디 (선택)",
+  ""
+].join("\n");
+document.querySelector('[data-mail]').href =
+  `mailto:${CONFIG.email}?subject=${encodeURIComponent("[아이디어 제보] ")}&body=${encodeURIComponent(mailBody)}`;
+
+/* 데모 화면: 실제 게임(copter.h)과 같은 320×130 동굴·물리·생성 규칙. 헬리콥터는 자동조종(예시)이고, 17초쯤 손을 떼서 부딪히는 장면까지 보여 준다 */
+/*SIM*/
+const makeCave = seed0 => {
+  const W = 320, H = 130, CX = 80, HW = 7, HH = 4, TICK = 1 / 120, SEG = 4;
+  const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+  let seed = seed0 >>> 0 || 1;
+  const rnd = () => (seed = (Math.imul(seed, 1103515245) + 12345) >>> 0, ((seed >>> 8) & 0xFFFF) / 65536);
+  const speed = d => 100 + 50 * clamp(d / 15000, 0, 1);
+  const gapAt = x => 100 - 56 * clamp((x - 400) / 15000, 0, 1);
+  const n = [], blocks = [];
+  const c = { v: H / 2, s: 0, ts: 0, left: 0 }, j = [0, 1].map(() => ({ v: 6, s: 0, ts: 0, left: 0 }));
+  let nextBlockX = 0;
+  const walk = (w, lo, hi, smax, k, active) => {
+    if (!active) w.ts = 0;
+    else if (--w.left <= 0) { w.ts = (rnd() * 2 - 1) * smax; if (rnd() < .2) w.ts = 0; w.left = 8 + Math.floor(rnd() * 40); }
+    const step = k * SEG; let ns = w.s + clamp(w.ts - w.s, -step, step);
+    if (ns > 0 && w.v + ns * SEG + ns * ns / (2 * k) + ns * SEG * 2 >= hi) { w.ts = -smax * (.3 + .7 * rnd()); w.left = 8 + Math.floor(rnd() * 30); ns = w.s - step; }
+    else if (ns < 0 && w.v + ns * SEG - ns * ns / (2 * k) + ns * SEG * 2 <= lo) { w.ts = smax * (.3 + .7 * rnd()); w.left = 8 + Math.floor(rnd() * 30); ns = w.s + step; }
+    w.s = ns; w.v += ns * SEG;
+    if (w.v < lo) { w.v = lo; w.s = 0; } if (w.v > hi) { w.v = hi; w.s = 0; }
+  };
+  const at = x => { const i = clamp(Math.floor(x / SEG), 0, n.length - 2);
+    const u = clamp((x - i * SEG) / SEG, 0, 1), a = n[i], b = n[i + 1];
+    return { top: a.top + (b.top - a.top) * u, bot: a.bot + (b.bot - a.bot) * u, guide: a.guide + (b.guide - a.guide) * u }; };
+  const span = (x0, x1, key) => { const p = at(x0), q = at(x1); let lo = Math.min(p[key], q[key]), hi = Math.max(p[key], q[key]);
+    for (let i = Math.floor(x0 / SEG) + 1; i * SEG < x1; i++) { lo = Math.min(lo, n[i][key]); hi = Math.max(hi, n[i][key]); }
+    return [lo, hi]; };
+  const placeBlock = () => {
+    const bx = (n.length - 1) * SEG - 10 - HW - SEG;
+    if (bx < 600 || bx < nextBlockX || rnd() >= .025) return;
+    const [gl, gh] = span(bx - HW, bx + 10 + HW, 'guide'), mt = span(bx, bx + 10, 'top')[1], mb = span(bx, bx + 10, 'bot')[0];
+    let below = rnd() < .5;
+    for (let tries = 0; tries < 2; tries++, below = !below) {
+      let y, room;
+      if (below) { y = gh + HH + 6; room = mb - 4 - y; } else { y = gl - HH - 6; room = y - (mt + 4); }
+      if (room < 8) continue;
+      const h = 8 + rnd() * (Math.min(room, 16) - 8);
+      blocks.push({ x: bx, y: below ? y : y - h, h });
+      nextBlockX = bx + 240 + rnd() * 160; return;
+    }
+  };
+  const gen = () => {
+    const i = n.length, x = i * SEG, g = gapAt(x);
+    if (i > 0) { walk(c, g / 2 + 5, H - g / 2 - 5, .45, .006, x > 400); for (const w of j) walk(w, 0, 12, .35, .02, 1); }
+    n.push({ guide: c.v, top: Math.max(c.v - g / 2 - j[0].v, 3), bot: Math.min(c.v + g / 2 + j[1].v, H - 3) });
+    placeBlock();
+  };
+  const f = { dist: 0, y: H / 2, vy: 0, t: 0, n, blocks, W, H, CX, HW, HH, SEG, TICK, at };
+  const fill = () => { while ((n.length - 2) * SEG < f.dist + W + 80) gen();
+    while (blocks.length && blocks[0].x + 10 < f.dist - 8) blocks.shift(); };
+  f.hit = () => { const x0 = f.dist + CX - HW, x1 = f.dist + CX + HW, mt = span(x0, x1, 'top')[1], mb = span(x0, x1, 'bot')[0];
+    if (f.y - HH < mt || f.y + HH > mb) return true;
+    return blocks.some(b => x0 < b.x + 10 && x1 > b.x && f.y - HH < b.y + b.h && f.y + HH > b.y); };
+  f.step = hold => {
+    f.vy = clamp(f.vy + (400 - (hold ? 800 : 0)) * TICK, -180, 180); f.y += f.vy * TICK;
+    f.dist += speed(f.dist) * TICK; f.t += TICK; fill(); return f.hit();
+  };
+  /* 자동조종: 조금 앞 가운데 길(±2.5px 흔들림)을 목표로, 지금 속도가 목표보다 아래로 빠르면 누른다 */
+  f.auto = () => { const v = speed(f.dist), g = at(f.dist + CX + v * .12).guide + Math.sin(f.t * 1.7) * 2.5;
+    return f.vy > clamp((g - f.y) / .12, -150, 150); };
+  fill();
+  return f;
+};
+/*END SIM*/
+(() => {
+  const cv = document.getElementById('demo'), g = cv.getContext('2d');
+  const S = 2, AX = 10, AY = 62, RELEASE = 17, CRASH_SHOW = 1.6;
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let f, phase, overAt, clock = 0, acc = 0, held = 0, trail = [], trailAt = 0, seed = 11, last = null;
+  const reset = () => {
+    f = makeCave(seed = (seed * 48271) % 2147483647); phase = 'fly'; trail = []; trailAt = 0;
+    for (let i = 0; i < 180; i++) f.step(f.auto());   /* 빈 출발선 대신 1.5초 날아간 상태부터 */
+  };
+  const tick = () => {
+    if (phase === 'crash') { if (clock - overAt > CRASH_SHOW) reset(); return; }
+    const hold = f.t < RELEASE && f.auto();
+    held += ((hold ? 1 : 0) - held) * .25;
+    if (f.step(hold)) { phase = 'crash'; overAt = clock; return; }
+    if (f.t - trailAt >= .06) { trailAt = f.t; trail.push([f.dist + f.CX - 9, f.y]); if (trail.length > 14) trail.shift(); }
+  };
+  const ln = (x, y, xx, yy, c, w) => { g.strokeStyle = c; g.lineWidth = w; g.beginPath(); g.moveTo(x, y); g.lineTo(xx, yy); g.stroke(); };
+  const ell = (x, y, rx, ry, c) => { g.fillStyle = c; g.beginPath(); g.ellipse(x, y, rx, ry, 0, 0, 7); g.fill(); };
+  const copter = (x, y, body) => {
+    g.lineCap = 'round';
+    ln(x - 6, y - 1, x - 15, y - 2, body, 2); ln(x - 15, y - 5, x - 15, y + 1, body, 1);
+    const sk = css('--skid'); ln(x - 5, y + 7, x + 6, y + 7, sk, 1); ln(x - 3, y + 5, x - 3, y + 7, sk, 1); ln(x + 4, y + 5, x + 4, y + 7, sk, 1);
+    ell(x + .5, y + .5, 7.5, 4.5, body); ell(x + 4, y - .5, 3, 2.5, css('--glass'));
+    ln(x, y - 4, x, y - 7, body, 1);
+    const blade = 4 + Math.abs(Math.sin(clock * 31)) * 8; ln(x - blade, y - 7, x + blade + 1, y - 7, body, 1);
+  };
+  const badge = (s) => {
+    g.font = 'bold 18px "Malgun Gothic","Apple SD Gothic Neo",sans-serif';
+    const w = g.measureText(s).width, cx = AX + (f.CX + 40 + f.W) / 2, cy = AY + f.H / 2;
+    g.fillStyle = css('--floor'); g.fillRect(cx - w / 2 - 8, cy - 13, w + 16, 26);
+    g.fillStyle = css('--sub'); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(s, cx, cy + 1);
+    g.textAlign = 'left'; g.textBaseline = 'alphabetic';
+  };
+  const draw = () => {
+    const ink = css('--sub'), green = css('--green'), floor = css('--floor'), W = f.W, H = f.H;
+    const m = Math.floor(f.dist / 10);
+    g.setTransform(S, 0, 0, S, 0, 0);
+    g.fillStyle = css('--card'); g.fillRect(0, 0, cv.width / S, cv.height / S);
+    g.fillStyle = ink; g.font = '9.5px "Segoe UI",system-ui,sans-serif';
+    g.fillText(`COPTER   DIST ${m} m   BEST 612 m`, AX, 16);
+    g.fillText(`PLAYS ${phase === 'crash' ? 38 : 37}`, AX, 29);
+    g.fillText('Esc exit   F8 hide   F9 new round', AX, 42);
+    g.fillText(phase === 'crash' ? `CRASH!  ${m} m   Press X to retry` : 'Hold X to climb, release to fall', AX, 55);
+    g.fillStyle = floor; g.fillRect(AX, AY, W, H);
+    g.save(); g.beginPath(); g.rect(AX, AY, W, H); g.clip();
+    const i0 = Math.floor(f.dist / f.SEG), i1 = Math.min(i0 + W / f.SEG + 2, f.n.length - 1);
+    for (const side of ['top', 'bot']) {
+      const pts = []; for (let i = i0; i <= i1; i++) pts.push([AX + i * f.SEG - f.dist, AY + f.n[i][side]]);
+      const edge = side === 'bot' ? AY + H + 2 : AY - 2;
+      g.fillStyle = css('--rock'); g.beginPath(); pts.forEach(([x, y], k) => k ? g.lineTo(x, y) : g.moveTo(x, y));
+      g.lineTo(pts[pts.length - 1][0], edge); g.lineTo(pts[0][0], edge); g.closePath(); g.fill();
+      g.strokeStyle = green; g.lineWidth = 2; g.lineJoin = 'round'; g.beginPath(); pts.forEach(([x, y], k) => k ? g.lineTo(x, y) : g.moveTo(x, y)); g.stroke();
+    }
+    for (const b of f.blocks) { const bx = AX + b.x - f.dist, by = AY + b.y;
+      g.fillStyle = css('--block'); g.fillRect(bx, by, 10, b.h); g.fillStyle = css('--block-top'); g.fillRect(bx + 1, by + 1, 8, 2); }
+    const cx = AX + f.CX, cy = AY + f.y;
+    g.fillStyle = css('--trail');
+    for (const [x, y] of trail) { const tx = AX + x - f.dist; if (tx > AX - 4 && tx < cx - 17) { g.beginPath(); g.arc(tx, AY + y, phase === 'crash' ? 1 : 2, 0, 7); g.fill(); } }
+    copter(cx, cy, phase === 'crash' ? css('--flag') : css('--heli'));
+    if (phase === 'crash') {
+      const u = Math.min((clock - overAt) / .8, 1);
+      g.strokeStyle = css('--flag'); g.lineWidth = 2; g.beginPath(); g.arc(cx, cy, 4 + u * 14, 0, 7); g.stroke();
+      if (u < 1) { g.fillStyle = css('--spark'); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4, r = 8 + u * 22; g.beginPath(); g.arc(cx + Math.cos(a) * r, cy + Math.sin(a) * r, 2, 0, 7); g.fill(); } }
+      badge('CRASH!');
+    }
+    g.restore();
+    g.strokeStyle = css('--edge'); g.lineWidth = 1; g.strokeRect(AX - .5, AY - .5, W + 1, H + 1);
+    const by = AY + H + 6, on = phase === 'fly' && held > .5;
+    g.fillStyle = css(on ? '--btn-on' : '--btn'); g.fillRect(AX, by, 110, 18);
+    ln(AX, by + 17.5, AX + 110, by + 17.5, css('--edge'), 1);
+    g.fillStyle = ink; g.font = '9.5px "Segoe UI",system-ui,sans-serif'; g.fillText('HOLD [X]', AX + 34, by + 13);
+  };
+  reset();
+  if (still) { for (let i = 0; i < 120 * 6; i++) tick(); draw(); return; }
+  const loop = ts => {
+    if (last !== null) { const dt = Math.min((ts - last) / 1000, .1); clock += dt; acc += dt;
+      while (acc >= f.TICK) { acc -= f.TICK; tick(); } }
+    last = ts; draw(); requestAnimationFrame(loop);
+  };
+  requestAnimationFrame(loop);
+})();
+
+const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
+if (isMobile) document.getElementById('mobile').classList.add('show');
+
+const toast = msg => { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1800); };
+const copyLink = async () => {
+  try { await navigator.clipboard.writeText(location.href); toast('링크를 복사했어요. PC 카톡에 붙여넣으세요'); }
+  catch (e) { prompt('아래 링크를 복사하세요', location.href); }
+};
+document.getElementById('copy').onclick = copyLink;
+document.getElementById('copymail').onclick = async e => {
+  e.preventDefault();
+  try { await navigator.clipboard.writeText(CONFIG.email); toast('메일 주소를 복사했어요'); }
+  catch (err) { prompt('아래 주소를 복사하세요', CONFIG.email); }
+};
+document.getElementById('share').onclick = async () => {
+  if (navigator.share) {
+    try { await navigator.share({ title: '회사 몰래 미니게임 6탄 · 헬리콥터', text: 'PC에서 열어서 받기', url: location.href }); } catch (e) {}
+  } else copyLink();
+};
+</script>
+</body>
+</html>
