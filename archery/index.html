@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>미니 양궁</title>
+<meta name="description" content="회사 몰래 미니게임 10탄 · X 하나로 쏘는 6발 양궁 · 설치 없는 131KB 무료 프로그램">
+<meta property="og:title" content="🏹 회사 몰래 미니게임 10탄 · 양궁">
+<meta property="og:description" content="흔들리는 조준점 + 매번 바뀌는 바람 · 누가 오면 F8 → 그 자리에서 멈춤">
+<style>
+:root{
+  --bg:#F6F7F3; --card:#FFFFFF; --ink:#2F3634; --sub:#6B7470; --line:#E2E6E1;
+  --green:#417C52; --on-green:#FFFFFF; --green-soft:#E6EFE7; --flag:#A65642; --key:#EEF1EC; --warn:#FFF6E5; --warn-ink:#8A5A00;
+  --text:#48524F; --fig:#48524F; --floor:#F1F4F1; --edge:#BEC6C0; --wood:#827453; --btn:#E6EDE6; --badge:#6C736F; --spark:#9DA49F; --mark:#FAFAF7;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#161A19; --card:#1F2423; --ink:#E7ECE9; --sub:#9AA39F; --line:#2E3533;
+    --green:#6FB383; --on-green:#0F2418; --green-soft:#22342A; --flag:#D07B66; --key:#2A302E; --warn:#33291A; --warn-ink:#E9B85C;
+    --text:#C9D0CC; --fig:#E7ECE9; --floor:#262C2A; --edge:#46504C; --wood:#B7A57A; --btn:#2E3533; --badge:#C9D0CC; --spark:#7C8581; --mark:#FAFAF7;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161A19; --card:#1F2423; --ink:#E7ECE9; --sub:#9AA39F; --line:#2E3533;
+  --green:#6FB383; --on-green:#0F2418; --green-soft:#22342A; --flag:#D07B66; --key:#2A302E; --warn:#33291A; --warn-ink:#E9B85C;
+  --text:#C9D0CC; --fig:#E7ECE9; --floor:#262C2A; --edge:#46504C; --wood:#B7A57A; --btn:#2E3533; --badge:#C9D0CC; --spark:#7C8581; --mark:#FAFAF7;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+  line-height:1.6;word-break:keep-all;overflow-wrap:anywhere}
+main{max-width:560px;margin:0 auto;padding:24px 16px 56px}
+.brand{font-size:13px;color:var(--sub);letter-spacing:.02em}
+h1{font-size:28px;line-height:1.3;margin:6px 0 4px}
+.lead{color:var(--sub);margin:0 0 18px}
+section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin:14px 0}
+h2{font-size:17px;margin:0 0 12px}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.stage canvas{display:block;width:100%;height:auto}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 0}
+.chip{font-size:12.5px;background:var(--green-soft);color:var(--green);padding:4px 10px;border-radius:99px;font-weight:600}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px 16px;border-radius:12px;
+  background:var(--green);color:var(--on-green);font-weight:700;font-size:16px;text-decoration:none;border:0;cursor:pointer;font-family:inherit}
+.btn.ghost{background:transparent;color:var(--green);border:1.5px solid var(--green);margin-top:8px;font-size:15px;padding:12px}
+.small{font-size:13px;color:var(--sub)}
+.mobile{display:none;background:var(--warn);color:var(--warn-ink);border-color:transparent}
+.mobile.show{display:block}
+.mobile h2{color:var(--warn-ink)}
+.keys{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;align-items:center;margin:0}
+kbd{display:inline-block;min-width:42px;text-align:center;font-family:inherit;font-size:13px;font-weight:700;
+  background:var(--key);border:1px solid var(--line);border-bottom-width:3px;border-radius:8px;padding:4px 8px;white-space:nowrap}
+.keys dd{margin:0}
+.star{color:var(--flag);font-weight:700}
+.note{background:var(--key);border-radius:10px;padding:10px 12px;margin:14px 0 0;font-size:13.5px}
+ol.steps{margin:0;padding-left:20px}
+ol.steps li{margin:4px 0 12px}
+.dialog{border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13px;margin-top:8px;background:var(--bg)}
+.dialog .bar{background:#1F5FA8;color:#fff;padding:8px 12px;font-weight:700}
+.dialog .body{padding:10px 12px;color:var(--sub)}
+.dialog .body u{color:#2B78D0;text-decoration-thickness:2px}
+.dialog .foot{display:flex;justify-content:flex-end;gap:6px;padding:0 12px 10px}
+.dialog .foot span{border:1px solid var(--line);border-radius:4px;padding:3px 14px;color:var(--sub);background:var(--card)}
+.dialog .foot span.hit{border:2px solid #2B78D0;color:#2B78D0;font-weight:700}
+ul.safe{margin:0;padding-left:18px}
+ul.safe li{margin:4px 0}
+code.hash{display:block;font-size:11.5px;font-family:ui-monospace,Consolas,monospace;background:var(--key);padding:8px 10px;border-radius:8px;word-break:break-all;margin-top:6px}
+details{border-top:1px solid var(--line);padding:10px 0}
+details:first-of-type{border-top:0;padding-top:0}
+summary{cursor:pointer;font-weight:600}
+details p{margin:6px 0 0;color:var(--sub);font-size:14.5px}
+.next{text-align:center}
+footer{text-align:center;font-size:12px;color:var(--sub);margin-top:20px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<main>
+  <div class="brand" data-brand>딸깍연구소</div>
+  <h1>🏹 회사 몰래 미니게임 10탄<br>양궁</h1>
+  <p class="lead">숨 쉬듯 흔들리는 조준점, 화살마다 바뀌는 바람. <b>바람 반대편으로 조준점이 갔을 때 X!</b> 누가 오면 F8 한 번이면 그 자리에서 멈춰요.</p>
+
+  <div class="stage" aria-label="게임 화면 예시">
+    <canvas id="demo" width="920" height="464" role="img" aria-label="왼쪽에 활을 당긴 궁수, 가운데 과녁 위에서 초록 조준점이 흔들리고, 오른쪽에 바람 방향과 6발 점수표가 있는 장면"></canvas>
+  </div>
+  <div class="chips"><span class="chip">설치 없음</span><span class="chip">131KB</span><span class="chip">버튼 하나(X)</span><span class="chip">6발 세트</span><span class="chip">소리 없음</span><span class="chip">투명 배경</span></div>
+
+  <section class="mobile" id="mobile">
+    <h2>📱 지금 휴대폰이시죠?</h2>
+    <p style="margin:0 0 12px">이 게임은 <b>Windows PC용</b>이에요. 링크를 PC로 보내서 받아주세요.</p>
+    <button class="btn" id="share">카톡 '나에게 보내기'로 전달</button>
+    <button class="btn ghost" id="copy">링크 복사</button>
+  </section>
+
+  <section>
+    <h2>⬇️ 다운로드</h2>
+    <a class="btn" data-dl="exe" href="#">MiniArchery.exe 받기 <span class="small" style="color:inherit;opacity:.75">131KB</span></a>
+    <a class="btn ghost" data-dl="zip" href="#">회사망에서 exe가 막히면 → zip으로 받기</a>
+    <p class="small" style="margin:10px 0 0">Windows 10/11 · 64비트 · 관리자 권한 필요 없음</p>
+  </section>
+
+  <section>
+    <h2>🎮 30초 사용법</h2>
+    <dl class="keys">
+      <dt><kbd>X</kbd></dt><dd>누르는 순간 발사. 상자 위 <b>SHOOT [X]</b> 버튼을 클릭해도 돼요</dd>
+      <dt><kbd>WIND</kbd></dt><dd>화살은 <b>화살표 방향으로 밀려요.</b> 1 m/s마다 7픽셀 — 링 한 칸(6픽셀)보다 조금 더</dd>
+      <dt><kbd>F8</kbd></dt><dd>숨기기 / 다시 보이기 <span class="star">← 누가 오면 이것!</span> 숨긴 동안 흔들림·화살이 멈춰요</dd>
+      <dt><kbd>F9</kbd></dt><dd>새 세트 (최고기록·누적 X-10은 유지)</dd>
+      <dt><kbd>Esc</kbd></dt><dd>종료 (게임 위 오른쪽 클릭도 종료)</dd>
+    </dl>
+    <p class="small" style="margin:14px 0 0">한 세트는 6발, 최대 60점. 가운데 노랑 10점부터 바깥 흰색 1점까지, 과녁 밖은 M(0점). 선에 걸치면 높은 점수로 쳐요(실제 양궁 규칙). 10점 안의 작은 원은 <b>X-10</b> — 점수는 10점과 같고 개수를 따로 세요. 바람은 화살마다 0.0~6.0 m/s, 8방향으로 바뀌고 정답 위치는 표시하지 않아요. 최고 세트 점수(BEST)와 누적 X-10은 자동 저장돼요.</p>
+    <p class="note">⌨️ 게임이 <b>보이는 동안엔 X 키를 게임이 써요.</b> 엑셀에 X를 쳐야 하면 F8로 숨기세요. 숨기면 X는 원래대로 글자가 입력돼요.</p>
+  </section>
+
+  <section>
+    <h2>🛡️ 처음 실행할 때 파란 창이 뜨면</h2>
+    <ol class="steps">
+      <li><b>추가 정보</b>를 누르고
+        <div class="dialog" aria-hidden="true">
+          <div class="bar">Windows의 PC 보호</div>
+          <div class="body">Microsoft Defender SmartScreen에서 인식할 수 없는 앱의 시작을 차단했습니다.<br><u>추가 정보</u></div>
+          <div class="foot"><span>실행 안 함</span></div>
+        </div>
+      </li>
+      <li><b>실행</b>을 누르면 끝
+        <div class="dialog" aria-hidden="true">
+          <div class="bar">Windows의 PC 보호</div>
+          <div class="body">앱: MiniArchery.exe<br>게시자: 알 수 없는 게시자</div>
+          <div class="foot"><span class="hit">실행</span><span>실행 안 함</span></div>
+        </div>
+      </li>
+    </ol>
+    <p class="small" style="margin:0">개인이 만든 무료 프로그램이라 유료 코드 서명이 없어서 뜨는 창이에요. 한 번만 하면 다음부턴 안 떠요.</p>
+  </section>
+
+  <section>
+    <h2>🔒 안심하고 쓰세요</h2>
+    <ul class="safe">
+      <li>인터넷 접속 <b>없음</b></li>
+      <li>자동 실행 등록 <b>없음</b> · 키보드 후킹 <b>없음</b></li>
+      <li>설치 안 함 → exe 지우면 삭제 끝</li>
+    </ul>
+    <div class="small" style="margin-top:12px">파일 지문(SHA256) — 받은 exe가 이 값과 같으면 원본이에요.</div>
+    <code class="hash" data-sha></code>
+  </section>
+
+  <section>
+    <h2>🙋 자주 묻는 질문</h2>
+    <details><summary>실행했는데 아무것도 안 보여요</summary>
+      <p>주 모니터 <b>왼쪽 아래, 작업표시줄 바로 위</b>에 작은 궁수와 과녁이 떠요. F8을 눌렀다면 한 번 더 누르면 다시 보여요. 골프·야구·두더지잡기 같은 다른 미니게임이 켜져 있으면 같은 자리에 겹치니 Esc로 끄고 실행해 주세요.</p></details>
+    <details><summary>엑셀에서 X가 안 쳐져요</summary>
+      <p>게임이 보이는 동안엔 X 키를 게임이 받아요. <b>F8로 숨기면</b> 바로 원래대로 입력돼요. 다시 하려면 F8 한 번 더.</p></details>
+    <details><summary>가운데를 조준했는데 10점이 안 나와요</summary>
+      <p>바람 때문이에요. 화살은 WIND 화살표 방향으로 <b>1 m/s마다 7픽셀</b> 밀려요. 예) 오른쪽(→) 2.0 m/s면 조준점이 가운데에서 <b>왼쪽으로 14픽셀</b>(링 두 칸 남짓) 갔을 때 쏘면 10점. 바람이 0.0이면 다이얼에 점만 찍히고 밀리지 않아요.</p></details>
+    <details><summary>기다릴수록 흔들림이 커져요</summary>
+      <p>정상이에요. 활을 오래 당기고 있으면 <b>1초에 6%씩, 최대 1.4배</b>까지 흔들림이 커져요. 흔들리는 모양은 화살마다 달라요.</p></details>
+    <details><summary>6발 다 쏜 뒤 X를 눌러도 안 넘어가요</summary>
+      <p>마지막 점수가 1초 동안 표시된 뒤 「SET 점수」가 나오면 X(또는 NEW SET [X] 버튼)로 새 세트예요. <b>X를 누른 채로는 안 넘어가요.</b> 한 번 뗐다가 다시 눌러 주세요.</p></details>
+    <details><summary>F8로 다시 보이게 하면 어떻게 돼요?</summary>
+      <p>숨긴 순간 그대로 이어져요. 숨긴 동안엔 흔들림·날아가던 화살·점수 표시 시간이 모두 멈춰 있어요.</p></details>
+    <details><summary>게임 근처를 클릭하면 뒤 창이 안 눌려요</summary>
+      <p>그림이 없는 투명한 부분은 뒤 프로그램을 그대로 클릭할 수 있어요. <b>글자·과녁·버튼 위</b>의 클릭은 게임이 받아요(버튼 말고는 아무 동작 없음).</p></details>
+    <details><summary>갑자기 꺼졌어요</summary>
+      <p>Esc는 다른 창에서 눌러도 게임이 꺼져요(엑셀에서 Esc 누를 때 주의). 화면 해상도가 바뀌어도 자동 종료돼요. 다시 실행하면 기록은 그대로 남아 있어요.</p></details>
+    <details><summary>기록까지 완전히 지우고 싶어요</summary>
+      <p>명령 프롬프트에서 <code>reg delete HKCU\Software\MiniArchery /f</code> 실행 후 exe를 지우면 흔적이 없어요.</p></details>
+    <details><summary>회사 PC에 써도 되나요?</summary>
+      <p>프로그램 자체는 인터넷을 쓰지 않지만, 실행 허용 여부는 회사마다 달라요. <b>사내 보안 규정을 꼭 확인</b>해 주세요.</p></details>
+  </section>
+
+  <section class="next">
+    <h2>💡 아이디어 제보받아요</h2>
+    <p style="margin:0 0 14px">"이런 프로그램 있으면 좋겠다", "이런 미니게임 해보고 싶다"<br>보내주시면 골라서 만들어 무료로 배포해요.</p>
+    <a class="btn" data-mail href="#">✉️ 메일로 자세히 보내기</a>
+    <a class="btn ghost" data-dm href="#">인스타 DM으로 가볍게 보내기</a>
+    <p class="small" style="margin:12px 0 0">메일은 양식이 미리 채워져 있어요. 참고할 화면 캡처나 파일을 첨부해 주시면 더 정확하게 만들 수 있어요.</p>
+    <p class="small" style="margin:6px 0 0">메일 앱이 안 열리면 주소를 복사해서 보내주세요<br><a href="#" id="copymail" style="color:var(--green);font-weight:600;white-space:nowrap"><span data-email></span> 복사</a></p>
+  </section>
+
+  <footer><span data-brand>딸깍연구소</span> · Mini Archery v1.0</footer>
+</main>
+<div class="toast" id="toast">링크를 복사했어요</div>
+
+<script>
+/* ===== 여기만 바꾸면 됩니다 ===== */
+const CONFIG = {
+  brand:  "딸깍연구소",
+  insta:  "ddalkkak.lab",        // 인스타 아이디 (@ 빼고)
+  email:  "ddalkkakkim@gmail.com",  // 제보 받을 메일
+  github: "ddalkkakkim",         // GitHub 아이디
+  repo:   "mini-games",          // GitHub 저장소 이름
+  tag:    "archery-v1.0",        // 릴리스 태그
+  exe:    "MiniArchery.exe",
+  zip:    "MiniArchery.zip",
+  sha256: "EDB9585347E64EFE72706ECF4B32CD7AFEADB472EB06BCDD0ABCA233381DA7F1"
+};
+/* ================================ */
+const base = `https://github.com/${CONFIG.github}/${CONFIG.repo}/releases/download/${CONFIG.tag}/`;
+document.querySelector('[data-dl="exe"]').href = base + CONFIG.exe;
+document.querySelector('[data-dl="zip"]').href = base + CONFIG.zip;
+document.querySelectorAll('[data-sha]').forEach(e => e.textContent = CONFIG.sha256);
+document.querySelectorAll('[data-dm]').forEach(a => { a.href = `https://ig.me/m/${CONFIG.insta}`; a.target = "_blank"; a.rel = "noopener"; });
+document.querySelectorAll('[data-brand]').forEach(e => e.textContent = CONFIG.brand);
+document.querySelectorAll('[data-email]').forEach(e => e.textContent = CONFIG.email);
+const mailBody = [
+  "1. 어떤 프로그램 / 미니게임인가요?",
+  "", "",
+  "2. 지금은 어떻게 하고 계세요? (뭐가 귀찮은지)",
+  "", "",
+  "3. 꼭 있었으면 하는 기능",
+  "", "",
+  "4. 참고 화면·파일이 있으면 첨부해 주세요 (회사 기밀은 빼고!)",
+  "", "",
+  "5. 완성되면 알려드릴 인스타 아이디 (선택)",
+  ""
+].join("\n");
+document.querySelector('[data-mail]').href =
+  `mailto:${CONFIG.email}?subject=${encodeURIComponent("[아이디어 제보] ")}&body=${encodeURIComponent(mailBody)}`;
+
+/* 데모 화면: 실제 게임(archery.h · main.c)과 같은 과녁·흔들림·바람·점수 규칙과 화면 배치. 궁수는 자동(예시)으로, 바람을 보정해 쏘되 매번 정확하진 않다 */
+/*SIM*/
+const ARCH = (() => {
+  const TARGET_R = 60, RING_W = 6, X_R = 3, WIND_PX = 7, WIND_MAX = 60, ARROWS = 6;
+  const SWAY_MIN = 44, SWAY_MAX = 56, SWAY_SPEED = .6, TREMOR = 1.5, FATIGUE = .06, FATIGUE_CAP = 1.4, PI = Math.PI;
+  const limit = (v, a, b) => v < a ? a : v > b ? b : v;
+  const ringScore = d => { d = Math.abs(d); if (d > TARGET_R + 1e-9) return 0; let k = Math.ceil(d / RING_W - 1e-9); if (k < 1) k = 1; return 11 - k; };
+  const isX = d => Math.abs(d) <= X_R + 1e-9;
+  const windOffset = (t, dir) => { const a = dir * PI / 4, m = t / 10 * WIND_PX; let dx = Math.cos(a) * m, dy = -Math.sin(a) * m;
+    if (Math.abs(dx) < 1e-9) dx = 0; if (Math.abs(dy) < 1e-9) dy = 0; return [dx, dy]; };
+  const rng = seed => () => (seed = (Math.imul(seed, 1103515245) + 12345) >>> 0, ((seed >>> 8) & 0xFFFF) / 65536);
+  const swayInit = r => ({ ax: SWAY_MIN + (SWAY_MAX - SWAY_MIN) * r(), ay: SWAY_MIN + (SWAY_MAX - SWAY_MIN) * r(), p: Array.from({ length: 6 }, () => r() * 2 * PI) });
+  const windRoll = r => { let t = Math.floor(r() * (WIND_MAX + 1)); if (t > WIND_MAX) t = WIND_MAX; return [t, Math.floor(r() * 8) & 7]; };
+  const swayAt = (s, t) => { const w = 2 * PI * SWAY_SPEED, g = limit(1 + FATIGUE * t, 1, FATIGUE_CAP);
+    return [g * s.ax * (.62 * Math.sin(w * .29 * t + s.p[0]) + .38 * Math.sin(w * .71 * t + s.p[1])) + TREMOR * Math.sin(2 * PI * 5.3 * t + s.p[4]),
+            g * s.ay * (.62 * Math.sin(w * .37 * t + s.p[2]) + .38 * Math.sin(w * .83 * t + s.p[3])) + TREMOR * Math.sin(2 * PI * 6.1 * t + s.p[5])]; };
+  return { TARGET_R, RING_W, X_R, ARROWS, PI, limit, ringScore, isX, windOffset, rng, swayInit, windRoll, swayAt };
+})();
+/*END SIM*/
+(() => {
+  const A = ARCH, cv = document.getElementById('demo'), c = cv.getContext('2d');
+  /* 화면 좌표는 main.c 그대로(H=작업영역 높이). 캔버스는 x 10~470, y H-232~H 구간을 2배로 */
+  const S = 2, OX = -10, H = 232, TX = 196, CY = H - 84, FLIGHT = .30, SHOW = 1.0, DONE_SHOW = 3.0, TICK = 1 / 120;
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let r = A.rng(20261017), gt = 0, acc = 0, last = null;
+  let phase, sway, windT, windDir, aimT, shots, scores, xs, hitX, hitY, xThis, flightStart, resultAt, doneAt, newBest, shootAt, best = 52, totalX = 37;
+  const nextArrow = () => { sway = A.swayInit(r); [windT, windDir] = A.windRoll(r); aimT = 0; phase = 0;
+    /* 자동 궁수: 0.6~3.5초 사이에서 바람을 더한 탄착점이 가운데에 가장 가까운 순간을 노리고, 사람처럼 0~0.06초 늦게 쏜다 */
+    const [dx, dy] = A.windOffset(windT, windDir); let bd = 1e9; shootAt = .6;
+    for (let t = .6; t < 3.5; t += TICK) { const [ax, ay] = A.swayAt(sway, t), d = Math.hypot(ax + dx, ay + dy); if (d < bd) { bd = d; shootAt = t; } }
+    shootAt += Math.random() * .06; };
+  const newSet = () => { shots = 0; xThis = 0; newBest = false; scores = []; xs = []; hitX = []; hitY = []; nextArrow(); };
+  const shoot = () => { const [ax, ay] = A.swayAt(sway, aimT), [dx, dy] = A.windOffset(windT, windDir);
+    hitX[shots] = ax + dx; hitY[shots] = ay + dy; const d = Math.hypot(hitX[shots], hitY[shots]);
+    scores[shots] = A.ringScore(d); xs[shots] = A.isX(d); phase = 1; flightStart = gt; };
+  const land = () => { const i = shots++; phase = 2; resultAt = gt; if (xs[i]) { xThis++; totalX++; }
+    if (shots === A.ARROWS) { const t = scores.reduce((a, b) => a + b, 0); newBest = t > best; if (newBest) best = t; } };
+  const tick = () => {
+    gt += TICK;
+    if (phase === 0) { aimT += TICK; if (aimT >= shootAt) shoot(); }
+    else if (phase === 1 && gt - flightStart >= FLIGHT) land();
+    else if (phase === 2 && gt - resultAt >= SHOW) { if (shots < A.ARROWS) nextArrow(); else { phase = 3; doneAt = gt; } }
+    else if (phase === 3 && gt - doneAt >= DONE_SHOW) newSet();
+  };
+  const ln = (x, y, xx, yy, col, w) => { c.strokeStyle = col; c.lineWidth = w; c.beginPath(); c.moveTo(x, y); c.lineTo(xx, yy); c.stroke(); };
+  const dot = (x, y, rad, col) => { c.fillStyle = col; c.beginPath(); c.arc(x, y, rad + .5, 0, 7); c.fill(); };
+  const ring = (x, y, rad, col, w) => { c.strokeStyle = col; c.lineWidth = w; c.beginPath(); c.arc(x, y, rad + .5, 0, 7); c.stroke(); };
+  const disc = (x, y, rad, fill, edge) => { c.fillStyle = fill; c.beginPath(); c.arc(x, y, rad + .5, 0, 7); c.fill(); ring(x, y, rad, edge, 1); };
+  const label = (s, x, y, col = css('--text')) => { c.font = '11px "Segoe UI",system-ui,sans-serif'; c.fillStyle = col; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText(s, x, y); };
+  const centered = (s, x, y, w, h, col, font = '11px "Segoe UI",system-ui,sans-serif') => { c.font = font; c.fillStyle = col; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(s, x + w / 2, y + h / 2 + 1); c.textAlign = 'left'; };
+  const zone = k => k >= 9 ? '#E2C870' : k >= 7 ? '#C47062' : k >= 5 ? '#6C92B0' : k >= 3 ? '#545A5A' : '#EEEEE8';
+  const target = (cx, cy) => {
+    for (let k = 1; k <= 10; k++) disc(cx, cy, Math.round((11 - k) * A.RING_W), zone(k), k === 3 || k === 4 ? '#AAB0AC' : k === 5 ? '#545A5A' : '#787C76');
+    ring(cx, cy, A.X_R, '#968046', 1); ln(cx - 1, cy, cx + 2, cy, '#968046', 1);
+  };
+  const archer = released => { const g = H - 24, x = 50, ink = css('--fig'), edge = css('--edge'), wood = css('--wood');
+    c.lineCap = 'round'; ln(24, g, 100, g, edge, 1);
+    dot(x, g - 74, 4, ink); ln(x, g - 69, x, g - 36, ink, 2); ln(x, g - 36, x - 8, g, ink, 2); ln(x, g - 36, x + 8, g, ink, 2);
+    ln(x, g - 62, x + 20, g - 60, ink, 2);
+    c.strokeStyle = wood; c.lineWidth = 2; c.beginPath(); [[16, -80], [22, -71], [24, -60], [22, -49], [16, -40]].forEach(([dx, dy], k) => k ? c.lineTo(x + dx, g + dy) : c.moveTo(x + dx, g + dy)); c.stroke();
+    if (released) { ln(x + 16, g - 80, x + 16, g - 40, edge, 1); ln(x, g - 62, x - 4, g - 56, ink, 2); }
+    else { ln(x + 16, g - 80, x + 3, g - 60, edge, 1); ln(x + 3, g - 60, x + 16, g - 40, edge, 1); ln(x, g - 63, x + 3, g - 60, ink, 2);
+      ln(x + 3, g - 60, x + 34, g - 60, wood, 1); ln(x + 30, g - 62, x + 34, g - 60, ink, 1); ln(x + 30, g - 58, x + 34, g - 60, ink, 1); }
+  };
+  const windDial = (cx, cy) => { disc(cx, cy, 14, css('--floor'), css('--edge')); const ink = css('--fig');
+    if (windT === 0) { dot(cx, cy, 2, ink); return; }
+    const a = windDir * A.PI / 4, co = Math.cos(a), si = -Math.sin(a), x0 = cx - co * 10, y0 = cy - si * 10, x1 = cx + co * 10, y1 = cy + si * 10;
+    ln(x0, y0, x1, y1, ink, 2);
+    for (const k of [-1, 1]) { const b = a + A.PI + k * .55; ln(x1, y1, x1 + Math.cos(b) * 6, y1 - Math.sin(b) * 6, ink, 2); }
+  };
+  const draw = () => {
+    c.setTransform(S, 0, 0, S, OX * S, 0);
+    c.fillStyle = css('--card'); c.fillRect(-OX, 0, cv.width / S, cv.height / S);
+    const total = scores.reduce((a, b) => a + b, 0), cur = phase <= 1 ? shots + 1 : shots, red = css('--flag'), green = css('--green');
+    label(`ARCHERY   ARROW ${cur}/${A.ARROWS}   SET ${total}   BEST ${best}`, 24, H - 224);
+    label(`X-10 THIS SET ${xThis}   TOTAL X-10 ${totalX}`, 24, H - 209);
+    label('Esc exit   F8 hide   F9 new set', 24, H - 194);
+    let msg;
+    if (phase === 0) msg = 'Aim against the wind, then X / SHOOT';
+    else if (phase === 1) msg = '...';
+    else if (phase === 2) { const i = shots - 1; msg = xs[i] ? 'X-10!  Dead center' : scores[i] === 0 ? 'MISS  Off the target' : `${scores[i]} point${scores[i] === 1 ? '' : 's'}`; }
+    else msg = `SET ${total}${newBest ? '  NEW BEST!' : ''}   X / click for new set`;
+    label(msg, 24, H - 179);
+    c.fillStyle = css('--btn'); c.fillRect(24, H - 162, 100, 18); centered(phase === 3 ? 'NEW SET [X]' : 'SHOOT [X]', 24, H - 162, 100, 18, css('--text'));
+    archer(phase !== 0);
+    c.lineCap = 'butt';
+    ln(TX - 48, H - 22, TX + 48, H - 22, css('--edge'), 1); ln(TX - 30, CY + 40, TX - 38, H - 22, css('--wood'), 2); ln(TX + 30, CY + 40, TX + 38, H - 22, css('--wood'), 2);
+    target(TX, CY);
+    c.save(); c.beginPath(); c.rect(TX - 92, H - 170, 185, 166); c.clip();
+    for (let i = 0; i < shots; i++) { const x = TX + Math.round(hitX[i]), y = CY + Math.round(hitY[i]);
+      dot(x, y, 3, css('--mark')); dot(x, y, 2, '#48524F'); if (phase === 2 && i === shots - 1) ring(x, y, 5, red, 1); }
+    if (phase === 0) { const [ax, ay] = A.swayAt(sway, aimT), x = TX + Math.round(ax), y = CY + Math.round(ay), gr = '#417C52';
+      ring(x, y, 6, gr, 2); ln(x - 11, y, x - 4, y, gr, 2); ln(x + 5, y, x + 12, y, gr, 2); ln(x, y - 11, x, y - 4, gr, 2); ln(x, y + 5, x, y + 12, gr, 2); dot(x, y, 1, gr); }
+    if (phase === 2 && gt - resultAt < .3) { const u = (gt - resultAt) / .3, i = shots - 1; ring(TX + Math.round(hitX[i]), CY + Math.round(hitY[i]), 6 + Math.floor(u * 10), '#FAFAF7', 1); }
+    c.restore();
+    if (phase === 1) { const u = A.limit((gt - flightStart) / FLIGHT, 0, 1), i = shots, sx = 84, sy = H - 84, ex = TX + hitX[i], ey = CY + hitY[i];
+      const x = sx + (ex - sx) * u, y = sy + (ey - sy) * u - Math.sin(u * A.PI) * 12; let dx = ex - sx, dy = ey - sy - Math.cos(u * A.PI) * 12 * A.PI; const l = Math.hypot(dx, dy); dx /= l; dy /= l;
+      ln(x - dx * 20, y - dy * 20, x, y, css('--wood'), 2); dot(x, y, 1, css('--fig'));
+      ln(x - dx * 20, y - dy * 20, x - dx * 25 - dy * 3, y - dy * 25 + dx * 3, red, 1); ln(x - dx * 20, y - dy * 20, x - dx * 25 + dy * 3, y - dy * 25 - dx * 3, red, 1); }
+    const rx = 304;
+    label('WIND', rx, H - 166); windDial(rx + 14, H - 134); label(`${Math.floor(windT / 10)}.${windT % 10} m/s`, rx + 36, H - 141);
+    for (let i = 0; i < A.ARROWS; i++) { const x = rx + i * 27, y = H - 108;
+      c.fillStyle = css('--floor'); c.fillRect(x, y, 24, 18); c.strokeStyle = i === shots && phase === 0 ? green : css('--edge'); c.lineWidth = 1; c.strokeRect(x + .5, y + .5, 23, 17);
+      if (i < shots) centered(xs[i] ? 'X' : scores[i] === 0 ? 'M' : String(scores[i]), x, y, 24, 18, scores[i] === 0 ? red : css('--text')); }
+    label(`TOTAL ${total}   X ${xThis}`, rx, H - 86);
+    let badge = null;
+    if (phase === 2) { const i = shots - 1; badge = xs[i] ? 'X-10!' : scores[i] === 0 ? 'MISS' : String(scores[i]); }
+    else if (phase === 3) badge = newBest ? 'NEW BEST!' : `SET ${total}`;
+    if (badge) { c.fillStyle = css('--floor'); c.fillRect(rx, H - 66, 162, 36); c.strokeStyle = css('--edge'); c.strokeRect(rx + .5, H - 65.5, 161, 35);
+      centered(badge, rx, H - 66, 162, 36, css('--badge'), 'bold 24px "Malgun Gothic","Apple SD Gothic Neo",sans-serif');
+      if (phase === 3 && newBest && gt - doneAt < .8) { const u = (gt - doneAt) / .8; for (let i = 0; i < 8; i++) { const a = i * A.PI / 4; dot(TX + Math.cos(a) * (64 + u * 14), CY + Math.sin(a) * (64 + u * 14), 2, css('--spark')); } } }
+  };
+  newSet();
+  if (still) { for (let i = 0; i < 120 * 9; i++) tick(); draw(); return; }
+  const loop = ts => {
+    if (last !== null) { acc += Math.min((ts - last) / 1000, .1); while (acc >= TICK) { acc -= TICK; tick(); } }
+    last = ts; draw(); requestAnimationFrame(loop);
+  };
+  requestAnimationFrame(loop);
+})();
+
+const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
+if (isMobile) document.getElementById('mobile').classList.add('show');
+
+const toast = msg => { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1800); };
+const copyLink = async () => {
+  try { await navigator.clipboard.writeText(location.href); toast('링크를 복사했어요. PC 카톡에 붙여넣으세요'); }
+  catch (e) { prompt('아래 링크를 복사하세요', location.href); }
+};
+document.getElementById('copy').onclick = copyLink;
+document.getElementById('copymail').onclick = async e => {
+  e.preventDefault();
+  try { await navigator.clipboard.writeText(CONFIG.email); toast('메일 주소를 복사했어요'); }
+  catch (err) { prompt('아래 주소를 복사하세요', CONFIG.email); }
+};
+document.getElementById('share').onclick = async () => {
+  if (navigator.share) {
+    try { await navigator.share({ title: '회사 몰래 미니게임 10탄 · 양궁', text: 'PC에서 열어서 받기', url: location.href }); } catch (e) {}
+  } else copyLink();
+};
+</script>
+</body>
+</html>
