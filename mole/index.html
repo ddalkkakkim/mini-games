@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>미니 두더지잡기</title>
+<meta name="description" content="회사 몰래 미니게임 8탄 · 마우스로 하는 30초 두더지잡기 · 설치 없는 107KB 무료 프로그램">
+<meta property="og:title" content="🔨 회사 몰래 미니게임 8탄 · 두더지잡기">
+<meta property="og:description" content="금색은 +3, 넥타이 맨 부장님은 −3 · 누가 오면 F8 → 시간도 멈춤">
+<style>
+:root{
+  --bg:#F6F7F3; --card:#FFFFFF; --ink:#2F3634; --sub:#6B7470; --line:#E2E6E1;
+  --green:#417C52; --on-green:#FFFFFF; --green-soft:#E6EFE7; --flag:#A65642; --key:#EEF1EC; --warn:#FFF6E5; --warn-ink:#8A5A00;
+  --grass:#D6E2D4; --edge:#AAB6AC; --panel:#F7F8F5; --rim:#B0A896; --soil:#5C5448; --bar:#C4D0C4; --idle:#C8CECA;
+  --gold-ink:#CEA028; --cursor:#2F3634;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#161A19; --card:#1F2423; --ink:#E7ECE9; --sub:#9AA39F; --line:#2E3533;
+    --green:#6FB383; --on-green:#0F2418; --green-soft:#22342A; --flag:#D07B66; --key:#2A302E; --warn:#33291A; --warn-ink:#E9B85C;
+    --grass:#2C3A2F; --edge:#46524A; --panel:#252B29; --rim:#5A5448; --soil:#1C1915; --bar:#3A4A3E; --idle:#3E4642;
+    --gold-ink:#E2BC54; --cursor:#E7ECE9;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161A19; --card:#1F2423; --ink:#E7ECE9; --sub:#9AA39F; --line:#2E3533;
+  --green:#6FB383; --on-green:#0F2418; --green-soft:#22342A; --flag:#D07B66; --key:#2A302E; --warn:#33291A; --warn-ink:#E9B85C;
+  --grass:#2C3A2F; --edge:#46524A; --panel:#252B29; --rim:#5A5448; --soil:#1C1915; --bar:#3A4A3E; --idle:#3E4642;
+  --gold-ink:#E2BC54; --cursor:#E7ECE9;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+  line-height:1.6;word-break:keep-all;overflow-wrap:anywhere}
+main{max-width:560px;margin:0 auto;padding:24px 16px 56px}
+.brand{font-size:13px;color:var(--sub);letter-spacing:.02em}
+h1{font-size:28px;line-height:1.3;margin:6px 0 4px}
+.lead{color:var(--sub);margin:0 0 18px}
+section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin:14px 0}
+h2{font-size:17px;margin:0 0 12px}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.stage canvas{display:block;width:100%;height:auto}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 0}
+.chip{font-size:12.5px;background:var(--green-soft);color:var(--green);padding:4px 10px;border-radius:99px;font-weight:600}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px 16px;border-radius:12px;
+  background:var(--green);color:var(--on-green);font-weight:700;font-size:16px;text-decoration:none;border:0;cursor:pointer;font-family:inherit}
+.btn.ghost{background:transparent;color:var(--green);border:1.5px solid var(--green);margin-top:8px;font-size:15px;padding:12px}
+.small{font-size:13px;color:var(--sub)}
+.mobile{display:none;background:var(--warn);color:var(--warn-ink);border-color:transparent}
+.mobile.show{display:block}
+.mobile h2{color:var(--warn-ink)}
+.keys{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;align-items:center;margin:0}
+kbd{display:inline-block;min-width:42px;text-align:center;font-family:inherit;font-size:13px;font-weight:700;
+  background:var(--key);border:1px solid var(--line);border-bottom-width:3px;border-radius:8px;padding:4px 8px;white-space:nowrap}
+.keys dd{margin:0}
+.star{color:var(--flag);font-weight:700}
+.note{background:var(--key);border-radius:10px;padding:10px 12px;margin:14px 0 0;font-size:13.5px}
+.moles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 14px;text-align:center}
+.moles div{background:var(--key);border-radius:10px;padding:10px 4px;font-size:13px}
+.moles b{display:block;font-size:20px;line-height:1.2}
+.moles .minus b{color:var(--flag)}
+ol.steps{margin:0;padding-left:20px}
+ol.steps li{margin:4px 0 12px}
+.dialog{border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13px;margin-top:8px;background:var(--bg)}
+.dialog .bar{background:#1F5FA8;color:#fff;padding:8px 12px;font-weight:700}
+.dialog .body{padding:10px 12px;color:var(--sub)}
+.dialog .body u{color:#2B78D0;text-decoration-thickness:2px}
+.dialog .foot{display:flex;justify-content:flex-end;gap:6px;padding:0 12px 10px}
+.dialog .foot span{border:1px solid var(--line);border-radius:4px;padding:3px 14px;color:var(--sub);background:var(--card)}
+.dialog .foot span.hit{border:2px solid #2B78D0;color:#2B78D0;font-weight:700}
+ul.safe{margin:0;padding-left:18px}
+ul.safe li{margin:4px 0}
+code.hash{display:block;font-size:11.5px;font-family:ui-monospace,Consolas,monospace;background:var(--key);padding:8px 10px;border-radius:8px;word-break:break-all;margin-top:6px}
+details{border-top:1px solid var(--line);padding:10px 0}
+details:first-of-type{border-top:0;padding-top:0}
+summary{cursor:pointer;font-weight:600}
+details p{margin:6px 0 0;color:var(--sub);font-size:14.5px}
+.next{text-align:center}
+footer{text-align:center;font-size:12px;color:var(--sub);margin-top:20px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<main>
+  <div class="brand" data-brand>딸깍연구소</div>
+  <h1>🔨 회사 몰래 미니게임 8탄<br>두더지잡기</h1>
+  <p class="lead">30초 동안 올라오는 두더지를 <b>마우스로 클릭.</b> 금색은 +3, <b>넥타이 맨 부장님은 −3.</b> 누가 오면 F8 한 번이면 시간까지 멈춰요.</p>
+
+  <div class="stage" aria-label="게임 화면 예시">
+    <canvas id="demo" width="600" height="528" role="img" aria-label="잔디 위 구멍 9개에서 두더지가 올라오고, 커서가 두더지를 클릭해 잡는 장면. 넥타이 맨 부장님 두더지도 섞여 나온다"></canvas>
+  </div>
+  <div class="chips"><span class="chip">설치 없음</span><span class="chip">107KB</span><span class="chip">마우스만</span><span class="chip">한 판 30초</span><span class="chip">소리 없음</span><span class="chip">투명 배경</span></div>
+
+  <section class="mobile" id="mobile">
+    <h2>📱 지금 휴대폰이시죠?</h2>
+    <p style="margin:0 0 12px">이 게임은 <b>Windows PC용</b>이에요. 링크를 PC로 보내서 받아주세요.</p>
+    <button class="btn" id="share">카톡 '나에게 보내기'로 전달</button>
+    <button class="btn ghost" id="copy">링크 복사</button>
+  </section>
+
+  <section>
+    <h2>⬇️ 다운로드</h2>
+    <a class="btn" data-dl="exe" href="#">MiniMole.exe 받기 <span class="small" style="color:inherit;opacity:.75">107KB</span></a>
+    <a class="btn ghost" data-dl="zip" href="#">회사망에서 exe가 막히면 → zip으로 받기</a>
+    <p class="small" style="margin:10px 0 0">Windows 10/11 · 64비트 · 관리자 권한 필요 없음</p>
+  </section>
+
+  <section>
+    <h2>🎮 30초 사용법</h2>
+    <div class="moles">
+      <div>갈색 두더지<b>+1</b></div>
+      <div>금색 두더지<b>+3</b>평소보다 짧게</div>
+      <div class="minus">부장님<b>−3</b>안경·흰 셔츠·빨간 넥타이</div>
+    </div>
+    <dl class="keys">
+      <dt><kbd>START 클릭</kbd></dt><dd>상자 가운데 초록 버튼을 누르면 30초 시작</dd>
+      <dt><kbd>클릭</kbd></dt><dd>올라와 있는 두더지를 클릭해서 잡기. 빈 구멍을 눌러도 감점 없어요</dd>
+      <dt><kbd>F8</kbd></dt><dd>숨기기 / 다시 보이기 <span class="star">← 누가 오면 이것!</span> 숨긴 동안 시간과 두더지가 멈춰요</dd>
+      <dt><kbd>F9</kbd></dt><dd>새 판 (최고기록·누적 기록은 유지)</dd>
+      <dt><kbd>Esc</kbd></dt><dd>종료 (게임 위 오른쪽 클릭도 종료)</dd>
+    </dl>
+    <p class="small" style="margin:14px 0 0">시간이 갈수록 두더지가 더 짧게 나오고, 동시에 나오는 수가 2 → 3 → 4마리로 늘어나요. 부장님은 한 번에 한 명만, 전체의 20% 이하로 나와요. 최고 점수(BEST)와 지금까지 잡은 두더지 수(TOTAL MOLES)는 자동 저장돼요.</p>
+    <p class="note">⌨️ <b>키보드는 F8·F9·Esc 말고는 안 써요.</b> 게임을 켜 둔 채로 엑셀에 숫자를 쳐도 그대로 입력되고, 작업 중인 창의 포커스도 빼앗지 않아요.</p>
+  </section>
+
+  <section>
+    <h2>🛡️ 처음 실행할 때 파란 창이 뜨면</h2>
+    <ol class="steps">
+      <li><b>추가 정보</b>를 누르고
+        <div class="dialog" aria-hidden="true">
+          <div class="bar">Windows의 PC 보호</div>
+          <div class="body">Microsoft Defender SmartScreen에서 인식할 수 없는 앱의 시작을 차단했습니다.<br><u>추가 정보</u></div>
+          <div class="foot"><span>실행 안 함</span></div>
+        </div>
+      </li>
+      <li><b>실행</b>을 누르면 끝
+        <div class="dialog" aria-hidden="true">
+          <div class="bar">Windows의 PC 보호</div>
+          <div class="body">앱: MiniMole.exe<br>게시자: 알 수 없는 게시자</div>
+          <div class="foot"><span class="hit">실행</span><span>실행 안 함</span></div>
+        </div>
+      </li>
+    </ol>
+    <p class="small" style="margin:0">개인이 만든 무료 프로그램이라 유료 코드 서명이 없어서 뜨는 창이에요. 한 번만 하면 다음부턴 안 떠요.</p>
+  </section>
+
+  <section>
+    <h2>🔒 안심하고 쓰세요</h2>
+    <ul class="safe">
+      <li>인터넷 접속 <b>없음</b></li>
+      <li>자동 실행 등록 <b>없음</b> · 키보드 후킹 <b>없음</b></li>
+      <li>설치 안 함 → exe 지우면 삭제 끝</li>
+    </ul>
+    <div class="small" style="margin-top:12px">파일 지문(SHA256) — 받은 exe가 이 값과 같으면 원본이에요.</div>
+    <code class="hash" data-sha></code>
+  </section>
+
+  <section>
+    <h2>🙋 자주 묻는 질문</h2>
+    <details><summary>실행했는데 아무것도 안 보여요</summary>
+      <p>주 모니터 <b>왼쪽 아래, 작업표시줄 바로 위</b>에 잔디 상자로 떠요. F8을 눌렀다면 한 번 더 누르면 다시 보여요. 골프·야구·헬리콥터 같은 다른 미니게임이 켜져 있으면 같은 자리에 겹치니 Esc로 끄고 실행해 주세요.</p></details>
+    <details><summary>상자 근처를 클릭하면 뒤 창이 눌려요 / 안 눌려요</summary>
+      <p>잔디 상자 <b>안</b>의 클릭은 게임이 받아서 뒤 창이 안 눌려요. 상자 <b>밖</b>의 투명한 부분은 뒤 프로그램을 그대로 클릭할 수 있어요. 상자 안에선 커서가 손 모양으로 바뀌어요.</p></details>
+    <details><summary>분명 맞혔는데 점수가 안 올라요</summary>
+      <p>덜 올라온 두더지는 <b>보이는 부분만</b> 맞아요(머리만 나왔으면 머리를 클릭). 이미 맞힌 두더지는 별이 도는 동안 다시 맞지 않아요.</p></details>
+    <details><summary>점수가 마이너스가 됐어요</summary>
+      <p>부장님을 때리면 −3이에요. 회색 양복에 <b>안경 + 흰 셔츠 + 빨간 넥타이</b>가 부장님이에요. 이번 판에 때린 수는 BOSS 칸에 나와요. BEST는 1점 이상일 때만 기록돼요.</p></details>
+    <details><summary>F8로 다시 보이게 하면 어떻게 돼요?</summary>
+      <p>숨긴 순간의 남은 시간·두더지 그대로 <b>바로 이어서</b> 진행돼요. 마우스를 상자 근처에 두고 F8을 누르세요.</p></details>
+    <details><summary>끝나고 START가 회색이에요</summary>
+      <p>30초가 끝나고 <b>1초 뒤</b> 초록색으로 바뀌면 누를 수 있어요. 막판에 연타하다 실수로 바로 새 판이 시작되지 않게 막아 뒀어요.</p></details>
+    <details><summary>갑자기 꺼졌어요</summary>
+      <p>Esc는 다른 창에서 눌러도 게임이 꺼져요(엑셀에서 Esc 누를 때 주의). 화면 해상도가 바뀌어도 자동 종료돼요. 다시 실행하면 기록은 그대로 남아 있어요.</p></details>
+    <details><summary>기록까지 완전히 지우고 싶어요</summary>
+      <p>명령 프롬프트에서 <code>reg delete HKCU\Software\MiniMole /f</code> 실행 후 exe를 지우면 흔적이 없어요.</p></details>
+    <details><summary>회사 PC에 써도 되나요?</summary>
+      <p>프로그램 자체는 인터넷을 쓰지 않지만, 실행 허용 여부는 회사마다 달라요. <b>사내 보안 규정을 꼭 확인</b>해 주세요.</p></details>
+  </section>
+
+  <section class="next">
+    <h2>💡 아이디어 제보받아요</h2>
+    <p style="margin:0 0 14px">"이런 프로그램 있으면 좋겠다", "이런 미니게임 해보고 싶다"<br>보내주시면 골라서 만들어 무료로 배포해요.</p>
+    <a class="btn" data-mail href="#">✉️ 메일로 자세히 보내기</a>
+    <a class="btn ghost" data-dm href="#">인스타 DM으로 가볍게 보내기</a>
+    <p class="small" style="margin:12px 0 0">메일은 양식이 미리 채워져 있어요. 참고할 화면 캡처나 파일을 첨부해 주시면 더 정확하게 만들 수 있어요.</p>
+    <p class="small" style="margin:6px 0 0">메일 앱이 안 열리면 주소를 복사해서 보내주세요<br><a href="#" id="copymail" style="color:var(--green);font-weight:600;white-space:nowrap"><span data-email></span> 복사</a></p>
+  </section>
+
+  <footer><span data-brand>딸깍연구소</span> · Mini Mole v1.0</footer>
+</main>
+<div class="toast" id="toast">링크를 복사했어요</div>
+
+<script>
+/* ===== 여기만 바꾸면 됩니다 ===== */
+const CONFIG = {
+  brand:  "딸깍연구소",
+  insta:  "ddalkkak.lab",        // 인스타 아이디 (@ 빼고)
+  email:  "ddalkkakkim@gmail.com",  // 제보 받을 메일
+  github: "ddalkkakkim",         // GitHub 아이디
+  repo:   "mini-games",          // GitHub 저장소 이름
+  tag:    "mole-v1.0",           // 릴리스 태그
+  exe:    "MiniMole.exe",
+  zip:    "MiniMole.zip",
+  sha256: "292E327BCB2CE03B8EAA88B67A8A66DFA59A7D8601E1A95690419816F608B206"
+};
+/* ================================ */
+const base = `https://github.com/${CONFIG.github}/${CONFIG.repo}/releases/download/${CONFIG.tag}/`;
+document.querySelector('[data-dl="exe"]').href = base + CONFIG.exe;
+document.querySelector('[data-dl="zip"]').href = base + CONFIG.zip;
+document.querySelectorAll('[data-sha]').forEach(e => e.textContent = CONFIG.sha256);
+document.querySelectorAll('[data-dm]').forEach(a => { a.href = `https://ig.me/m/${CONFIG.insta}`; a.target = "_blank"; a.rel = "noopener"; });
+document.querySelectorAll('[data-brand]').forEach(e => e.textContent = CONFIG.brand);
+document.querySelectorAll('[data-email]').forEach(e => e.textContent = CONFIG.email);
+const mailBody = [
+  "1. 어떤 프로그램 / 미니게임인가요?",
+  "", "",
+  "2. 지금은 어떻게 하고 계세요? (뭐가 귀찮은지)",
+  "", "",
+  "3. 꼭 있었으면 하는 기능",
+  "", "",
+  "4. 참고 화면·파일이 있으면 첨부해 주세요 (회사 기밀은 빼고!)",
+  "", "",
+  "5. 완성되면 알려드릴 인스타 아이디 (선택)",
+  ""
+].join("\n");
+document.querySelector('[data-mail]').href =
+  `mailto:${CONFIG.email}?subject=${encodeURIComponent("[아이디어 제보] ")}&body=${encodeURIComponent(mailBody)}`;
+
+/* 데모 화면: 실제 게임(mole.h)과 같은 260×180 상자·구멍 위치·출현 규칙·판정. 커서는 자동(예시)이고, 판 중간에 부장님을 한 번 때리는 장면까지 보여 준다 */
+/*SIM*/
+const makeGame = seed0 => {
+  const BOX_W = 260, BOX_H = 180, HOLES = 9, ROUND = 30, RISE = .10, MW = 36, MH = 34, HIT_ANIM = .35, REST = .20;
+  const GOLD_P = .08, BOSS_P = .14, BOSS_CAP = .20, UP0 = .70, UP1 = .32, GAP0 = .50, GAP1 = .24;
+  const NORMAL = 0, GOLD = 1, BOSS = 2, EMPTY = 0, UP = 1, HIT = 2;
+  const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+  const g = { BOX_W, BOX_H, HOLES, ROUND, MH, HIT_ANIM, NORMAL, GOLD, BOSS, EMPTY, UP, HIT,
+    m: Array.from({ length: HOLES }, () => ({ state: EMPTY, kind: 0, t0: 0, up: 0, hitAt: 0, freeAt: 0 })),
+    t: 0, nextSpawn: .45, ended: false, score: 0, hits: 0, bossHits: 0, appeared: 0, bosses: 0, spawned: 0, seed: seed0 >>> 0 || 1 };
+  const rnd = () => (g.seed = (Math.imul(g.seed, 1103515245) + 12345) >>> 0, ((g.seed >>> 8) & 0xFFFF) / 65536);
+  g.hx = i => 48 + (i % 3) * 82; g.hy = i => 50 + Math.floor(i / 3) * 56;
+  const upTime = t => UP0 - clamp(t / ROUND, 0, 1) * (UP0 - UP1), gap = t => GAP0 - clamp(t / ROUND, 0, 1) * (GAP0 - GAP1);
+  const maxMoles = t => t < 10 ? 2 : t < 20 ? 3 : 4;
+  g.points = k => k === GOLD ? 3 : k === BOSS ? -3 : 1;
+  g.visible = m => { if (m.state !== UP) return m.state === HIT ? 1 : 0; let s = g.t - m.t0;
+    if (s <= 0) return 0; if (s < RISE) return s / RISE; s -= RISE; if (s < m.up) return 1; s -= m.up; return s < RISE ? 1 - s / RISE : 0; };
+  const contains = (i, v, x, y) => v > 0 && x >= g.hx(i) - MW / 2 - 2 && x <= g.hx(i) + MW / 2 + 2 && y >= g.hy(i) - v * MH - 2 && y <= g.hy(i) + 3;
+  const active = () => g.m.filter(m => m.state !== EMPTY).length;
+  const pick = () => { const free = []; g.m.forEach((m, i) => { if (m.state === EMPTY && g.t >= m.freeAt) free.push(i); });
+    if (!free.length) return -1; const k = Math.floor(rnd() * free.length); return free[Math.min(k, free.length - 1)]; };
+  const bossOk = () => !g.m.some(m => m.state === UP && m.kind === BOSS) && g.bosses + 1 <= BOSS_CAP * (g.spawned + 1);
+  const spawn = () => { const h = pick(); if (h < 0) return -1; const m = g.m[h], r = rnd();
+    m.kind = r < GOLD_P ? GOLD : r < GOLD_P + BOSS_P && bossOk() ? BOSS : NORMAL;
+    m.up = upTime(g.t) * (m.kind === GOLD ? .55 : 1) * (.85 + .3 * rnd()); m.t0 = g.t; m.state = UP;
+    g.spawned++; if (m.kind === BOSS) g.bosses++; else g.appeared++; return h; };
+  g.step = dt => {
+    if (g.ended) return false;
+    if (g.t + dt >= ROUND) { g.t = ROUND; g.ended = true; g.m.forEach(m => m.state = EMPTY); return true; }
+    g.t += dt;
+    for (const m of g.m) {
+      if (m.state === HIT && g.t - m.hitAt >= HIT_ANIM) { m.state = EMPTY; m.freeAt = g.t + REST; }
+      else if (m.state === UP && g.t - m.t0 >= 2 * RISE + m.up) { m.state = EMPTY; m.freeAt = g.t + REST; }
+    }
+    while (g.t >= g.nextSpawn) {
+      if (g.t > ROUND - .4) { g.nextSpawn = ROUND + 1; break; }
+      if (active() < maxMoles(g.t) && spawn() >= 0) g.nextSpawn += gap(g.t) * (.7 + .6 * rnd());
+      else { g.nextSpawn = g.t + .05; break; }
+    }
+    return false;
+  };
+  g.click = (x, y) => { if (g.ended) return -1;
+    for (let i = 0; i < HOLES; i++) { const m = g.m[i]; if (m.state !== UP || !contains(i, g.visible(m), x, y)) continue;
+      m.state = HIT; m.hitAt = g.t; g.score += g.points(m.kind);
+      if (m.kind === BOSS) g.bossHits++; else g.hits++; return i; }
+    return -1; };
+  g.acc = () => g.appeared ? Math.round(100 * g.hits / g.appeared) : 0;
+  return g;
+};
+/*END SIM*/
+(() => {
+  const cv = document.getElementById('demo'), c = cv.getContext('2d');
+  const S = 2, AX = 20, AY = 76, TICK = 1 / 120, OVER_SHOW = 3.2;
+  const START = { l: 80, t: 114, r: 180, b: 142 };
+  const FUR = '#8A7662', GOLDFUR = '#D6B24A', SUIT = '#68707E', HAIR = '#34383C', WHITE = '#FAFAF7', NOSE = '#D09288', EYE = '#242422', TIE = '#A65642';
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let g, phase, phaseAt, clock = 0, acc = 0, last = null, seed = 7, best = 68, total = 1286;
+  const cur = { x: 130, y: 150, tx: 130, ty: 150, target: -1, press: 0 };
+  let bossDone = false, nextLook = 0, newRec = false;
+  const startRound = () => { g = makeGame(seed = (seed * 48271) % 2147483647); phase = 'play'; phaseAt = clock; bossDone = false; nextLook = 0; cur.target = -1; };
+  const toStart = () => { g = makeGame(1); phase = 'wait'; phaseAt = clock; cur.tx = 130; cur.ty = 128; };
+  /* 자동 커서: 올라온 두더지 중 가장 먼저 나온 것(부장님 제외)을 골라 0.13~0.2초에 걸쳐 이동해 클릭(사람 손 정도라 놓치기도 한다). 판 중간 한 번만 부장님을 실수로 때린다 */
+  const choose = () => {
+    let pick = -1, early = 1e9;
+    g.m.forEach((m, i) => { if (m.state !== g.UP) return; const v = g.visible(m);
+      const wantBoss = m.kind === g.BOSS && !bossDone && g.t > 12;
+      if ((m.kind !== g.BOSS || wantBoss) && v > .3 && m.t0 < early) { early = m.t0; pick = i; } });
+    if (pick >= 0) { const miss = Math.random() < .1;   /* 사람처럼: 가끔 구멍 옆을 누른다 */
+      cur.target = pick; cur.tx = g.hx(pick) + (miss ? 26 : Math.random() * 10 - 5); cur.ty = g.hy(pick) - (miss ? 4 : 16);
+      cur.speed = 1 / (.13 + Math.random() * .07); cur.from = [cur.x, cur.y]; cur.u = 0; }
+  };
+  const tick = () => {
+    cur.press = Math.max(0, cur.press - TICK * 6);
+    if (phase === 'wait') { cur.x += (cur.tx - cur.x) * .08; cur.y += (cur.ty - cur.y) * .08;
+      if (clock - phaseAt > 1.4) { cur.press = 1; startRound(); } return; }
+    if (phase === 'over') { cur.x += (130 - cur.x) * .05; cur.y += (128 - cur.y) * .05;
+      if (clock - phaseAt > OVER_SHOW) { cur.press = 1; startRound(); } return; }
+    if (g.step(TICK)) { phase = 'over'; phaseAt = clock; total += g.hits; newRec = g.score > best; if (newRec) best = g.score; return; }
+    if (cur.target < 0) { if (g.t >= nextLook) choose(); return; }
+    cur.u = Math.min(1, cur.u + TICK * cur.speed); const e = 1 - (1 - cur.u) ** 3;
+    cur.x = cur.from[0] + (cur.tx - cur.from[0]) * e; cur.y = cur.from[1] + (cur.ty - cur.from[1]) * e;
+    if (cur.u >= 1) {
+      const m = g.m[cur.target]; cur.press = 1;
+      if (m.state === g.UP && m.kind === g.BOSS) bossDone = true;
+      g.click(cur.x, cur.y);
+      cur.target = -1; nextLook = g.t + .07 + Math.random() * .08;
+    }
+  };
+  const ell = (x, y, rx, ry, col) => { c.fillStyle = col; c.beginPath(); c.ellipse(x, y, rx, ry, 0, 0, 7); c.fill(); };
+  const ln = (x, y, xx, yy, col, w) => { c.strokeStyle = col; c.lineWidth = w; c.beginPath(); c.moveTo(x, y); c.lineTo(xx, yy); c.stroke(); };
+  const rect = (x, y, w, h, col) => { c.fillStyle = col; c.fillRect(x, y, w, h); };
+  const text = (s, x, y, col, align = 'left', font = '9.5px "Segoe UI",system-ui,sans-serif') => { c.font = font; c.fillStyle = col; c.textAlign = align; c.fillText(s, x, y); c.textAlign = 'left'; };
+  /* main.c draw_mole을 그대로 옮김: 구멍 가운데선 아래는 잘라서 구멍 속에 있는 것처럼 */
+  const mole = (hx, hy, kind, v, hit) => {
+    c.save(); c.beginPath(); c.rect(hx - 30, hy - g.MH - 14, 61, g.MH + 15); c.clip();
+    const w = hit ? 22 : 18, top = hy - (hit ? 20 : Math.round(v * g.MH)), body = kind === g.GOLD ? GOLDFUR : kind === g.BOSS ? SUIT : FUR;
+    ell(hx, top + (hit ? 15 : 18), w, hit ? 15 : 18, body); rect(hx - w, top + (hit ? 15 : 18), 2 * w + 1, 40, body);
+    c.lineCap = 'round';
+    if (kind === g.GOLD && !hit) ell(hx - 9, top + 7, 3, 3, '#F6E6AA');
+    if (kind === g.BOSS) {
+      ln(hx - 12, top + 3, hx + 10, top + 1, HAIR, 3); ln(hx - 14, top + 7, hx - 4, top + 3, HAIR, 2);
+      const ey = top + (hit ? 10 : 12);
+      if (hit) { for (const s of [-1, 1]) { const ex = hx + s * 7.5; ln(ex - 3.5, ey - 3, ex + 3.5, ey + 3, EYE, 2); ln(ex - 3.5, ey + 3, ex + 3.5, ey - 3, EYE, 2); } }
+      else { c.strokeStyle = '#282C2E'; c.lineWidth = 1; for (const s of [-7, 7]) { c.beginPath(); c.arc(hx + s, ey, 5, 0, 7); c.stroke(); ell(hx + s, ey, 1.2, 1.2, EYE); } ln(hx - 2, ey, hx + 2, ey, '#282C2E', 1); }
+      ln(hx - 4, ey + 9, hx + 4, ey + 9, HAIR, 1);
+      const sy = top + (hit ? 17 : 21);
+      c.fillStyle = WHITE; c.beginPath(); c.moveTo(hx - 10, sy); c.lineTo(hx + 10, sy); c.lineTo(hx, sy + 8); c.fill();
+      c.fillStyle = TIE; c.beginPath(); c.moveTo(hx - 3, sy + 2); c.lineTo(hx + 3, sy + 2); c.lineTo(hx + 5, sy + 14); c.lineTo(hx, sy + 19); c.lineTo(hx - 5, sy + 14); c.fill();
+    } else {
+      const ey = top + (hit ? 10 : 11);
+      if (hit) { for (const s of [-1, 1]) { const ex = hx + s * 6.5; ln(ex - 2.5, ey - 2, ex + 2.5, ey + 3, EYE, 2); ln(ex - 2.5, ey + 3, ex + 2.5, ey - 2, EYE, 2); } }
+      else { ell(hx - 7, ey, 2, 2, EYE); ell(hx + 7, ey, 2, 2, EYE); }
+      ell(hx, ey + 7, 3, 3, NOSE); rect(hx - 2, ey + 10, 2, 4, WHITE); rect(hx + 1, ey + 10, 2, 4, WHITE);
+    }
+    c.restore();
+  };
+  const hole = (hx, hy) => { ell(hx, hy, 25, 8, css('--rim')); ell(hx, hy, 22, 6, css('--soil')); };
+  const stars = (cx, cy, u, col) => { for (let k = 0; k < 5; k++) { const a = k * Math.PI * 2 / 5 - Math.PI / 2; if (Math.sin(a) > .5) continue;
+    const r = 12 + u * 8, x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r; ln(x - 3, y, x + 3, y, col, 1); ln(x, y - 3, x, y + 3, col, 1); } };
+  const hand = (x, y, p) => { /* 상자 안 손 모양 커서(누를 때 살짝 내려감) */
+    c.save(); c.translate(x - 4, y - 1 + p * 2); c.lineJoin = 'round';
+    c.fillStyle = css('--card'); c.strokeStyle = css('--cursor'); c.lineWidth = 1.2;
+    c.beginPath(); c.moveTo(3, 0); c.lineTo(6, 0); c.lineTo(6, 6); c.lineTo(12, 7); c.lineTo(13, 15); c.lineTo(10, 19); c.lineTo(3, 19); c.lineTo(-2, 10); c.lineTo(0, 9); c.lineTo(3, 12); c.closePath(); c.fill(); c.stroke();
+    c.restore(); };
+  const draw = () => {
+    const ink = css('--sub'), green = css('--green'), red = css('--flag'), W = g.BOX_W, H = g.BOX_H;
+    c.setTransform(S, 0, 0, S, 0, 0);
+    rect(0, 0, cv.width / S, cv.height / S, css('--card'));
+    const left = Math.max(0, Math.ceil((g.ROUND - g.t) * 10 - 1e-6) / 10);
+    text(`MOLE   TIME ${left.toFixed(1)} s   SCORE ${g.score}   BEST ${best}`, AX, AY - 62, ink);
+    text(`HIT ${g.hits}/${g.appeared}   ACC ${g.acc()}%   BOSS ${g.bossHits}   TOTAL MOLES ${total}`, AX, AY - 47, ink);
+    text('Esc exit   F8 hide   F9 new round', AX, AY - 32, ink);
+    text(phase === 'wait' ? "Click START. 30 seconds. Don't hit the boss!" : phase === 'play' ? 'Mole +1   Gold +3   Boss with tie -3'
+      : `TIME UP!  SCORE ${g.score}  ACC ${g.acc()}%${clock - phaseAt >= 1 ? '  Click START to retry' : ''}`, AX, AY - 17, ink);
+    rect(AX, AY, W, H, css('--grass')); c.strokeStyle = css('--edge'); c.lineWidth = 1; c.strokeRect(AX - .5, AY - .5, W + 1, H + 1);
+    if (phase === 'play') { rect(AX + 8, AY + 5, W - 16, 3, css('--bar')); rect(AX + 8, AY + 5, (W - 16) * (g.ROUND - g.t) / g.ROUND, 3, g.t > g.ROUND - 5 ? red : green); }
+    for (let i = 0; i < g.HOLES; i++) hole(AX + g.hx(i), AY + g.hy(i));
+    if (phase === 'play') g.m.forEach((m, i) => {
+      if (m.state === g.EMPTY) return; const hit = m.state === g.HIT, v = g.visible(m); if (!hit && v <= 0) return;
+      mole(AX + g.hx(i), AY + g.hy(i), m.kind, v, hit);
+      if (hit) { const u = Math.min(1, (g.t - m.hitAt) / g.HIT_ANIM), cx = AX + g.hx(i), cy = AY + g.hy(i) - 26, col = m.kind === g.BOSS ? red : css('--gold-ink');
+        stars(cx, cy, u, col); const p = g.points(m.kind);
+        text((p > 0 ? '+' : '') + p, cx + 30, cy + 4 - u * 6, m.kind === g.BOSS ? red : green, 'center', 'bold 11px "Segoe UI",system-ui,sans-serif'); }
+    });
+    if (phase !== 'play') {
+      rect(AX + 16, AY + 14, W - 32, H - 22, css('--panel')); c.strokeStyle = css('--edge'); c.strokeRect(AX + 16.5, AY + 14.5, W - 33, H - 23);
+      if (phase === 'wait') {
+        text("Whack the moles. Not the boss!", AX + W / 2, AY + 31, css('--ink'), 'center');
+        [[66, g.NORMAL, '+1'], [130, g.GOLD, '+3'], [194, g.BOSS, '-3 boss']].forEach(([x, k, s]) => {
+          ell(AX + x, AY + 76, 22, 6, css('--soil')); mole(AX + x, AY + 76, k, 1, false);
+          text(s, AX + x, AY + 95, k === g.BOSS ? red : css('--ink'), 'center'); });
+      } else {
+        text(newRec ? `NEW RECORD ${g.score}` : `SCORE ${g.score}`, AX + W / 2, AY + 54, ink, 'center', 'bold 22px "Malgun Gothic","Apple SD Gothic Neo",sans-serif');
+        text(`HIT ${g.hits} / ${g.appeared}   ACC ${g.acc()}%`, AX + W / 2, AY + 80, css('--ink'), 'center');
+        text(g.bossHits ? `BOSS HIT ${g.bossHits}  (-${g.bossHits * 3})` : 'BOSS HIT 0  Good job!', AX + W / 2, AY + 98, g.bossHits ? red : green, 'center');
+      }
+      const on = phase === 'wait' || clock - phaseAt >= 1;
+      rect(AX + START.l, AY + START.t, START.r - START.l, START.b - START.t, on ? green : css('--idle'));
+      text('START', AX + (START.l + START.r) / 2, AY + START.t + 18, phase === 'wait' || on ? css('--on-green') : css('--sub'), 'center');
+    }
+    hand(AX + cur.x, AY + cur.y, cur.press);
+  };
+  toStart();
+  if (still) { startRound(); for (let i = 0; i < 120 * 14; i++) tick(); draw(); return; }
+  const loop = ts => {
+    if (last !== null) { const dt = Math.min((ts - last) / 1000, .1); clock += dt; acc += dt;
+      while (acc >= TICK) { acc -= TICK; tick(); } }
+    last = ts; draw(); requestAnimationFrame(loop);
+  };
+  requestAnimationFrame(loop);
+})();
+
+const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
+if (isMobile) document.getElementById('mobile').classList.add('show');
+
+const toast = msg => { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1800); };
+const copyLink = async () => {
+  try { await navigator.clipboard.writeText(location.href); toast('링크를 복사했어요. PC 카톡에 붙여넣으세요'); }
+  catch (e) { prompt('아래 링크를 복사하세요', location.href); }
+};
+document.getElementById('copy').onclick = copyLink;
+document.getElementById('copymail').onclick = async e => {
+  e.preventDefault();
+  try { await navigator.clipboard.writeText(CONFIG.email); toast('메일 주소를 복사했어요'); }
+  catch (err) { prompt('아래 주소를 복사하세요', CONFIG.email); }
+};
+document.getElementById('share').onclick = async () => {
+  if (navigator.share) {
+    try { await navigator.share({ title: '회사 몰래 미니게임 8탄 · 두더지잡기', text: 'PC에서 열어서 받기', url: location.href }); } catch (e) {}
+  } else copyLink();
+};
+</script>
+</body>
+</html>
