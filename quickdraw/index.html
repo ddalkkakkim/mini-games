@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>미니 결투</title>
+<meta name="description" content="회사 몰래 미니게임 9탄 · FIRE! 뜨는 순간 X 한 번, 내 반응속도를 ms로 재는 서부 결투 · 설치 없는 112KB 무료 프로그램">
+<meta property="og:title" content="🤠 회사 몰래 미니게임 9탄 · 결투">
+<meta property="og:description" content="FIRE! 뜨는 순간 X · 내 반응속도 몇 ms? · 누가 오면 F8">
+<style>
+:root{
+  --bg:#F6F7F3; --card:#FFFFFF; --ink:#2F3634; --sub:#6B7470; --line:#E2E6E1;
+  --green:#417C52; --on-green:#FFFFFF; --green-soft:#E6EFE7; --flag:#A65642; --key:#EEF1EC; --warn:#FFF6E5; --warn-ink:#8A5A00;
+  --floor:#F1F4F1; --edge:#BEC6C0; --dirt:#CCD4CE; --man:#48524F; --gun:#827453; --soft:#9DA49F; --btn:#E6EDE6; --btn-on:#CCDAD0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#161A19; --card:#1F2423; --ink:#E7ECE9; --sub:#9AA39F; --line:#2E3533;
+    --green:#6FB383; --on-green:#0F2418; --green-soft:#22342A; --flag:#D07B66; --key:#2A302E; --warn:#33291A; --warn-ink:#E9B85C;
+    --floor:#262C2A; --edge:#3A423F; --dirt:#3E4744; --man:#E7ECE9; --gun:#B8A57A; --soft:#7C8581; --btn:#2E3533; --btn-on:#3E5446;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161A19; --card:#1F2423; --ink:#E7ECE9; --sub:#9AA39F; --line:#2E3533;
+  --green:#6FB383; --on-green:#0F2418; --green-soft:#22342A; --flag:#D07B66; --key:#2A302E; --warn:#33291A; --warn-ink:#E9B85C;
+  --floor:#262C2A; --edge:#3A423F; --dirt:#3E4744; --man:#E7ECE9; --gun:#B8A57A; --soft:#7C8581; --btn:#2E3533; --btn-on:#3E5446;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+  line-height:1.6;word-break:keep-all;overflow-wrap:anywhere}
+main{max-width:560px;margin:0 auto;padding:24px 16px 56px}
+.brand{font-size:13px;color:var(--sub);letter-spacing:.02em}
+h1{font-size:28px;line-height:1.3;margin:6px 0 4px}
+.lead{color:var(--sub);margin:0 0 18px}
+section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin:14px 0}
+h2{font-size:17px;margin:0 0 12px}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.stage canvas{display:block;width:100%;height:auto}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 0}
+.chip{font-size:12.5px;background:var(--green-soft);color:var(--green);padding:4px 10px;border-radius:99px;font-weight:600}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px 16px;border-radius:12px;
+  background:var(--green);color:var(--on-green);font-weight:700;font-size:16px;text-decoration:none;border:0;cursor:pointer;font-family:inherit}
+.btn.ghost{background:transparent;color:var(--green);border:1.5px solid var(--green);margin-top:8px;font-size:15px;padding:12px}
+.small{font-size:13px;color:var(--sub)}
+.mobile{display:none;background:var(--warn);color:var(--warn-ink);border-color:transparent}
+.mobile.show{display:block}
+.mobile h2{color:var(--warn-ink)}
+.keys{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;align-items:center;margin:0}
+kbd{display:inline-block;min-width:42px;text-align:center;font-family:inherit;font-size:13px;font-weight:700;
+  background:var(--key);border:1px solid var(--line);border-bottom-width:3px;border-radius:8px;padding:4px 8px;white-space:nowrap}
+.keys dd{margin:0}
+.star{color:var(--flag);font-weight:700}
+.note{background:var(--key);border-radius:10px;padding:10px 12px;margin:14px 0 0;font-size:13.5px}
+.opp{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:0 0 14px;text-align:center}
+.opp div{background:var(--key);border-radius:10px;padding:8px 2px;font-size:12px;color:var(--sub)}
+.opp b{display:block;font-size:16px;line-height:1.3;color:var(--ink)}
+ol.steps{margin:0;padding-left:20px}
+ol.steps li{margin:4px 0 12px}
+.dialog{border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13px;margin-top:8px;background:var(--bg)}
+.dialog .bar{background:#1F5FA8;color:#fff;padding:8px 12px;font-weight:700}
+.dialog .body{padding:10px 12px;color:var(--sub)}
+.dialog .body u{color:#2B78D0;text-decoration-thickness:2px}
+.dialog .foot{display:flex;justify-content:flex-end;gap:6px;padding:0 12px 10px}
+.dialog .foot span{border:1px solid var(--line);border-radius:4px;padding:3px 14px;color:var(--sub);background:var(--card)}
+.dialog .foot span.hit{border:2px solid #2B78D0;color:#2B78D0;font-weight:700}
+ul.safe{margin:0;padding-left:18px}
+ul.safe li{margin:4px 0}
+code.hash{display:block;font-size:11.5px;font-family:ui-monospace,Consolas,monospace;background:var(--key);padding:8px 10px;border-radius:8px;word-break:break-all;margin-top:6px}
+details{border-top:1px solid var(--line);padding:10px 0}
+details:first-of-type{border-top:0;padding-top:0}
+summary{cursor:pointer;font-weight:600}
+details p{margin:6px 0 0;color:var(--sub);font-size:14.5px}
+.next{text-align:center}
+footer{text-align:center;font-size:12px;color:var(--sub);margin-top:20px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<main>
+  <div class="brand" data-brand>딸깍연구소</div>
+  <h1>🤠 회사 몰래 미니게임 9탄<br>결투</h1>
+  <p class="lead">서부 총잡이 결투. <b>FIRE! 뜨는 순간 X 한 번.</b> 내 반응속도를 ms(1000분의 1초)로 재요. 미리 누르면 부정출발 FOUL!</p>
+
+  <div class="stage" aria-label="게임 화면 예시">
+    <canvas id="demo" width="680" height="456" role="img" aria-label="두 총잡이가 마주 선 장면. WAIT 뒤에 빨간 FIRE!가 뜨고 먼저 쏜 쪽이 이기며, 반응시간이 ms로 표시된다"></canvas>
+  </div>
+  <div class="chips"><span class="chip">설치 없음</span><span class="chip">112KB</span><span class="chip">버튼 하나(X)</span><span class="chip">한 판 5라운드</span><span class="chip">소리 없음</span><span class="chip">투명 배경</span></div>
+
+  <section class="mobile" id="mobile">
+    <h2>📱 지금 휴대폰이시죠?</h2>
+    <p style="margin:0 0 12px">이 게임은 <b>Windows PC용</b>이에요. 링크를 PC로 보내서 받아주세요.</p>
+    <button class="btn" id="share">카톡 '나에게 보내기'로 전달</button>
+    <button class="btn ghost" id="copy">링크 복사</button>
+  </section>
+
+  <section>
+    <h2>⬇️ 다운로드</h2>
+    <a class="btn" data-dl="exe" href="#">MiniQuickDraw.exe 받기 <span class="small" style="color:inherit;opacity:.75">112KB</span></a>
+    <a class="btn ghost" data-dl="zip" href="#">회사망에서 exe가 막히면 → zip으로 받기</a>
+    <p class="small" style="margin:10px 0 0">Windows 10/11 · 64비트 · 관리자 권한 필요 없음</p>
+  </section>
+
+  <section>
+    <h2>🎮 30초 사용법</h2>
+    <dl class="keys">
+      <dt><kbd>X</kbd></dt><dd>라운드 시작 → <b>WAIT...</b> → 1.5~5초 뒤 빨간 <b>FIRE!</b>가 뜨면 바로 X</dd>
+      <dt><kbd>FIRE [X]</kbd></dt><dd>장면 아래 버튼을 마우스로 눌러도 돼요(누르는 순간 인정)</dd>
+      <dt><kbd>F8</kbd></dt><dd>숨기기 / 다시 보이기 <span class="star">← 누가 오면 이것!</span> 진행 중 라운드는 취소되고, 다시 보이면 WAIT부터</dd>
+      <dt><kbd>F9</kbd></dt><dd>새 판 (최고기록·전승 횟수는 유지)</dd>
+      <dt><kbd>Esc</kbd></dt><dd>종료 (게임 위 오른쪽 클릭도 종료)</dd>
+    </dl>
+    <p class="small" style="margin:14px 0 8px">상대보다 빠르면 WIN, 같거나 느리면 LOSE. 상대는 라운드마다 빨라져요(±20ms 랜덤).</p>
+    <div class="opp">
+      <div>1R<b>420</b>ms</div><div>2R<b>380</b>ms</div><div>3R<b>340</b>ms</div><div>4R<b>300</b>ms</div><div>5R<b>260</b>ms</div>
+    </div>
+    <p class="small" style="margin:0">FIRE! 전에 누르거나 <b>100ms 미만</b>(사람이 보고 반응할 수 없는 속도 = 찍기)이면 <b>FOUL</b>, 1초 안에 안 쏘면 <b>TOO SLOW</b>로 그 라운드 패배. 5라운드가 끝나면 승수·평균(AVG)·최고(BEST)가 나오고, 5전 전승이면 PERFECT! 역대 최고 반응(BEST)과 전승 횟수(5/5 WINS)는 자동 저장돼요.</p>
+    <p class="note">⌨️ 게임이 <b>보이는 동안엔 X 키를 게임이 써요.</b> 엑셀에 X를 쳐야 하면 F8로 숨기세요. 숨기면 X는 원래대로 글자가 입력돼요.</p>
+  </section>
+
+  <section>
+    <h2>🛡️ 처음 실행할 때 파란 창이 뜨면</h2>
+    <ol class="steps">
+      <li><b>추가 정보</b>를 누르고
+        <div class="dialog" aria-hidden="true">
+          <div class="bar">Windows의 PC 보호</div>
+          <div class="body">Microsoft Defender SmartScreen에서 인식할 수 없는 앱의 시작을 차단했습니다.<br><u>추가 정보</u></div>
+          <div class="foot"><span>실행 안 함</span></div>
+        </div>
+      </li>
+      <li><b>실행</b>을 누르면 끝
+        <div class="dialog" aria-hidden="true">
+          <div class="bar">Windows의 PC 보호</div>
+          <div class="body">앱: MiniQuickDraw.exe<br>게시자: 알 수 없는 게시자</div>
+          <div class="foot"><span class="hit">실행</span><span>실행 안 함</span></div>
+        </div>
+      </li>
+    </ol>
+    <p class="small" style="margin:0">개인이 만든 무료 프로그램이라 유료 코드 서명이 없어서 뜨는 창이에요. 한 번만 하면 다음부턴 안 떠요.</p>
+  </section>
+
+  <section>
+    <h2>🔒 안심하고 쓰세요</h2>
+    <ul class="safe">
+      <li>인터넷 접속 <b>없음</b></li>
+      <li>자동 실행 등록 <b>없음</b> · 키보드 후킹 <b>없음</b></li>
+      <li>설치 안 함 → exe 지우면 삭제 끝</li>
+    </ul>
+    <div class="small" style="margin-top:12px">파일 지문(SHA256) — 받은 exe가 이 값과 같으면 원본이에요.</div>
+    <code class="hash" data-sha></code>
+  </section>
+
+  <section>
+    <h2>🙋 자주 묻는 질문</h2>
+    <details><summary>실행했는데 아무것도 안 보여요</summary>
+      <p>주 모니터 <b>왼쪽 아래, 작업표시줄 바로 위</b>에 총잡이 둘이 마주 선 작은 장면으로 떠요. F8을 눌렀다면 한 번 더 누르면 다시 보여요. 골프·야구·헬리콥터 같은 다른 미니게임이 켜져 있으면 같은 자리에 겹치니 Esc로 끄고 실행해 주세요.</p></details>
+    <details><summary>엑셀에서 X가 안 쳐져요</summary>
+      <p>게임이 보이는 동안엔 X 키를 게임이 받아요. <b>F8로 숨기면</b> 바로 원래대로 입력돼요. 다시 하려면 F8 한 번 더.</p></details>
+    <details><summary>빨리 눌렀는데 FOUL이 떠요</summary>
+      <p>FIRE!가 뜨기 <b>전에</b> 누르면 부정출발이에요. FIRE! 뒤라도 <b>100ms 미만</b>이면 보고 누른 게 아니라 찍은 걸로 보고 FOUL이에요. 대기 시간이 1.5~5초로 매번 달라서 리듬으로 맞출 수 없어요.</p></details>
+    <details><summary>기록이 생각보다 느리게 나와요</summary>
+      <p>반응시간은 <b>FIRE!를 화면에 그린 순간부터 X 키 신호가 들어온 순간까지</b>예요. 모니터가 실제로 빛을 내기까지의 지연과 키보드 자체 지연은 잴 수 없어서, 순수한 사람 반응보다 몇~수십 ms 크게 나와요. 다른 PC·모니터와 비교할 땐 참고해 주세요.</p></details>
+    <details><summary>화면에 (X polled: +-16 ms)가 떠요</summary>
+      <p>X 키를 쓰는 다른 미니게임(헬리콥터 등)이 켜져 있어서 X 단축키를 등록하지 못한 상태예요. 이때는 보조 방식으로 동작해 측정 오차가 최대 약 16ms 생기고, 뒤 프로그램에도 X가 입력될 수 있어요. 다른 게임을 Esc로 끄고 다시 실행하세요.</p></details>
+    <details><summary>F8로 숨겼다 다시 보이면 어떻게 돼요?</summary>
+      <p>WAIT 중이거나 FIRE!가 떠 있을 때 숨기면 <b>그 라운드는 취소</b>돼요(숨긴 동안 FIRE!가 나오지 않게). 다시 보이면 새 랜덤 대기 시간으로 WAIT부터 다시 시작하니 바로 준비하세요.</p></details>
+    <details><summary>판이 끝났는데 X를 눌러도 새 판이 안 돼요</summary>
+      <p>결과가 뜬 뒤 <b>0.5초</b> 동안은 X를 받지 않아요. X를 누르고 있었다면 한 번 뗐다가 다시 눌러 주세요. 누르면 바로 새 판 1라운드 WAIT가 시작돼요.</p></details>
+    <details><summary>갑자기 꺼졌어요</summary>
+      <p>Esc는 다른 창에서 눌러도 게임이 꺼져요(엑셀에서 Esc 누를 때 주의). 화면 해상도가 바뀌어도 자동 종료돼요. 다시 실행하면 기록은 그대로 남아 있어요.</p></details>
+    <details><summary>기록까지 완전히 지우고 싶어요</summary>
+      <p>명령 프롬프트에서 <code>reg delete HKCU\Software\MiniQuickDraw /f</code> 실행 후 exe를 지우면 흔적이 없어요.</p></details>
+    <details><summary>회사 PC에 써도 되나요?</summary>
+      <p>프로그램 자체는 인터넷을 쓰지 않지만, 실행 허용 여부는 회사마다 달라요. <b>사내 보안 규정을 꼭 확인</b>해 주세요.</p></details>
+  </section>
+
+  <section class="next">
+    <h2>💡 아이디어 제보받아요</h2>
+    <p style="margin:0 0 14px">"이런 프로그램 있으면 좋겠다", "이런 미니게임 해보고 싶다"<br>보내주시면 골라서 만들어 무료로 배포해요.</p>
+    <a class="btn" data-mail href="#">✉️ 메일로 자세히 보내기</a>
+    <a class="btn ghost" data-dm href="#">인스타 DM으로 가볍게 보내기</a>
+    <p class="small" style="margin:12px 0 0">메일은 양식이 미리 채워져 있어요. 참고할 화면 캡처나 파일을 첨부해 주시면 더 정확하게 만들 수 있어요.</p>
+    <p class="small" style="margin:6px 0 0">메일 앱이 안 열리면 주소를 복사해서 보내주세요<br><a href="#" id="copymail" style="color:var(--green);font-weight:600;white-space:nowrap"><span data-email></span> 복사</a></p>
+  </section>
+
+  <footer><span data-brand>딸깍연구소</span> · Mini Quick Draw v1.0</footer>
+</main>
+<div class="toast" id="toast">링크를 복사했어요</div>
+
+<script>
+/* ===== 여기만 바꾸면 됩니다 ===== */
+const CONFIG = {
+  brand:  "딸깍연구소",
+  insta:  "ddalkkak.lab",        // 인스타 아이디 (@ 빼고)
+  email:  "ddalkkakkim@gmail.com",  // 제보 받을 메일
+  github: "ddalkkakkim",         // GitHub 아이디
+  repo:   "mini-games",          // GitHub 저장소 이름
+  tag:    "quickdraw-v1.0",      // 릴리스 태그
+  exe:    "MiniQuickDraw.exe",
+  zip:    "MiniQuickDraw.zip",
+  sha256: "00DEA46BB2B116AEDDC27F70390F37440BD19215552B96BF8B7F3026126C7E35"
+};
+/* ================================ */
+const base = `https://github.com/${CONFIG.github}/${CONFIG.repo}/releases/download/${CONFIG.tag}/`;
+document.querySelector('[data-dl="exe"]').href = base + CONFIG.exe;
+document.querySelector('[data-dl="zip"]').href = base + CONFIG.zip;
+document.querySelectorAll('[data-sha]').forEach(e => e.textContent = CONFIG.sha256);
+document.querySelectorAll('[data-dm]').forEach(a => { a.href = `https://ig.me/m/${CONFIG.insta}`; a.target = "_blank"; a.rel = "noopener"; });
+document.querySelectorAll('[data-brand]').forEach(e => e.textContent = CONFIG.brand);
+document.querySelectorAll('[data-email]').forEach(e => e.textContent = CONFIG.email);
+const mailBody = [
+  "1. 어떤 프로그램 / 미니게임인가요?",
+  "", "",
+  "2. 지금은 어떻게 하고 계세요? (뭐가 귀찮은지)",
+  "", "",
+  "3. 꼭 있었으면 하는 기능",
+  "", "",
+  "4. 참고 화면·파일이 있으면 첨부해 주세요 (회사 기밀은 빼고!)",
+  "", "",
+  "5. 완성되면 알려드릴 인스타 아이디 (선택)",
+  ""
+].join("\n");
+document.querySelector('[data-mail]').href =
+  `mailto:${CONFIG.email}?subject=${encodeURIComponent("[아이디어 제보] ")}&body=${encodeURIComponent(mailBody)}`;
+
+/* 데모 화면: 실제 게임(quickdraw.h·main.c)과 같은 300×110 장면·대기 1.5~5초·상대 420→260ms·FOUL/TOO SLOW 판정.
+   X는 자동(예시)이고, 반응은 대체로 200~330ms에 가끔 부정출발도 한다 */
+/*SIM*/
+const QD = (() => {
+  const ROUNDS = 5, WAIT_MIN = 1.5, WAIT_SPAN = 3.5, MIN_HUMAN = 100, SLOW = 1000, OPP_FIRST = 420, OPP_STEP = 40, JIT = 20;
+  const WIN = 1, LOSE = 2, FOUL = 3, SLOWOUT = 4;
+  const waitSeconds = u => WAIT_MIN + WAIT_SPAN * Math.min(Math.max(u, 0), 65535 / 65536);
+  const opponentMs = (round, u) => OPP_FIRST - OPP_STEP * (round - 1) + Math.floor(Math.min(Math.max(u, 0), 65535 / 65536) * (2 * JIT + 1)) - JIT;
+  const judge = (ms, opp) => ms < MIN_HUMAN ? FOUL : ms >= SLOW ? SLOWOUT : ms < opp ? WIN : LOSE;
+  const stats = rs => { const s = { wins: 0, avg: -1, best: -1, valid: 0 }; let sum = 0;
+    for (const r of rs) { if (r.out === WIN) s.wins++;
+      if ((r.out === WIN || r.out === LOSE) && r.ms >= MIN_HUMAN) { sum += r.ms; s.valid++; if (s.best < 0 || r.ms < s.best) s.best = r.ms; } }
+    if (s.valid) s.avg = Math.floor((sum + Math.floor(s.valid / 2)) / s.valid); return s; };
+  return { ROUNDS, SLOW, MIN_HUMAN, WIN, LOSE, FOUL, SLOWOUT, waitSeconds, opponentMs, judge, stats };
+})();
+/*END SIM*/
+(() => {
+  const cv = document.getElementById('demo'), c = cv.getContext('2d');
+  const S = 2, SX = 20, SY = 72, W = 300, H = 110, G = SY + 92, BTN = { x: SX, y: SY + 116, w: 110, h: 18 };
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* phase 0 준비 1 WAIT 2 FIRE! 3 라운드 결과 4 판 결과 (main.c와 같음) */
+  let phase = 0, rounds = [], clock = 0, last = null, fireAt = 0, resultAt = 0, opp = 0, plan = null, nextPress = .9, pressedAt = -9;
+  let bestMs = 231, perfects = 2, newBest = false;
+  const press = () => {
+    pressedAt = clock;
+    if (phase === 0) startWait();
+    else if (phase === 1) finish(-1, QD.FOUL);
+    else if (phase === 2) { const ms = Math.floor((clock - fireAt) * 1000); finish(ms, QD.judge(ms, opp)); }
+    else if (phase === 3 && clock - resultAt >= .5) startWait();
+    else if (phase === 4 && clock - resultAt >= .5) { rounds = []; startWait(); }
+  };
+  const startWait = () => {
+    phase = 1; fireAt = clock + QD.waitSeconds(Math.random()); opp = QD.opponentMs(rounds.length + 1, Math.random());
+    /* 자동 X: 10% 부정출발, 나머지는 200~330ms 반응 */
+    plan = Math.random() < .1 ? { foul: clock + 1 + Math.random() * (fireAt - clock - 1.1) } : { ms: 200 + Math.floor(Math.random() * 130) };
+  };
+  const finish = (ms, out) => {
+    rounds.push({ ms, opp, out }); phase = rounds.length >= QD.ROUNDS ? 4 : 3; resultAt = clock; newBest = false;
+    if ((out === QD.WIN || out === QD.LOSE) && ms < bestMs) { bestMs = ms; newBest = true; }
+    if (phase === 4 && QD.stats(rounds).wins === QD.ROUNDS) perfects++;
+    nextPress = clock + (phase === 4 ? 3.2 : 1.5);
+  };
+  const tick = () => {
+    if (phase === 1 && plan.foul && clock >= plan.foul) { press(); return; }
+    if (phase === 1 && clock >= fireAt) phase = 2;
+    if (phase === 2 && clock - fireAt >= plan.ms / 1000) { press(); return; }
+    if (phase === 2 && clock - fireAt >= QD.SLOW / 1000) finish(-1, QD.SLOWOUT);
+    if ((phase === 0 || phase >= 3) && clock >= nextPress) press();
+  };
+  const ln = (x, y, xx, yy, col, w) => { c.strokeStyle = col; c.lineWidth = w; c.beginPath(); c.moveTo(x, y); c.lineTo(xx, yy); c.stroke(); };
+  const dot = (x, y, r, col) => { c.fillStyle = col; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); };
+  const ring = (x, y, r, col, w) => { c.strokeStyle = col; c.lineWidth = w; c.beginPath(); c.arc(x, y, r, 0, 7); c.stroke(); };
+  const rect = (x, y, w, h, col) => { c.fillStyle = col; c.fillRect(x, y, w, h); };
+  const text = (s, x, y, col, align = 'left', font = '9.5px "Segoe UI",system-ui,sans-serif') => { c.font = font; c.fillStyle = col; c.textAlign = align; c.textBaseline = 'alphabetic'; c.fillText(s, x, y); c.textAlign = 'left'; };
+  const badge = (s, col, top, bottom) => { c.font = 'bold 22px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle = col; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillText(s, SX + W / 2, (top + bottom) / 2 + 1); c.textAlign = 'left'; c.textBaseline = 'alphabetic'; };
+  /* main.c gunman을 그대로 옮김. dir=+1 오른쪽을 봄, pose 0 권총집 1 조준 2 쓰러짐 */
+  const gunman = (x, dir, pose, flash) => {
+    const ink = css('--man'), gun = css('--gun'), red = css('--flag'), g = G; c.lineCap = 'round';
+    if (pose === 2) { const hx = x - dir * 24;
+      ln(x + dir * 8, g - 1, x - dir * 2, g - 4, ink, 2); ln(x + dir * 8, g - 1, x + dir * 3, g - 2, ink, 2); ln(x - dir * 2, g - 4, x - dir * 19, g - 4, ink, 2); dot(hx, g - 5, 4, ink);
+      ln(x - dir * 10, g - 4, x - dir * 14, g - 10, ink, 2); ln(hx - dir * 7, g - 1, hx - dir * 15, g - 1, ink, 2); rect(dir > 0 ? hx - dir * 13 : hx - dir * 9 - 4, g - 5, 5, 4, ink); return; }
+    ln(x, g - 16, x - 6, g, ink, 2); ln(x, g - 16, x + 6, g, ink, 2); ln(x, g - 33, x, g - 16, ink, 2); dot(x, g - 38, 4, ink);
+    ln(x - 8, g - 43, x + 8, g - 43, ink, 2); rect(x - 4, g - 49, 9, 6, ink);
+    ln(x, g - 29, x - dir * 5, g - 20, ink, 2);
+    if (pose === 0) { ln(x, g - 29, x + dir * 5, g - 19, ink, 2); ln(x + dir * 5, g - 19, x + dir * 5, g - 13, gun, 3); }
+    else { ln(x, g - 29, x + dir * 13, g - 29, ink, 2); ln(x + dir * 12, g - 31, x + dir * 20, g - 31, gun, 3);
+      if (flash) { const fx = x + dir * 24; for (let i = -1; i <= 1; i++) ln(fx, g - 31, fx + dir * 6, g - 31 + i * 4, red, 1); dot(fx, g - 31, 2, red); } }
+  };
+  const draw = () => {
+    const ink = css('--sub'), green = css('--green'), red = css('--flag'), soft = css('--soft'), edge = css('--edge');
+    c.setTransform(S, 0, 0, S, 0, 0);
+    rect(0, 0, cv.width / S, cv.height / S, css('--card'));
+    const st = QD.stats(rounds), lastR = rounds.length ? rounds[rounds.length - 1] : null;
+    const round = Math.min(Math.max(phase >= 3 ? rounds.length : rounds.length + 1, 1), QD.ROUNDS);
+    text(`QUICK DRAW   ROUND ${round}/5   WINS ${st.wins}`, SX, SY - 52, ink);
+    text(`BEST ${bestMs} ms   5/5 WINS x${perfects}`, SX, SY - 37, ink);
+    text('Esc exit   F8 hide   F9 new duel', SX, SY - 22, ink);
+    text(phase === 0 ? 'Press X / FIRE, wait, shoot on FIRE!' : phase === 1 ? "WAIT... don't touch X yet" : phase === 2 ? 'SHOOT!'
+      : phase === 3 ? 'X / FIRE for the next round' : 'DUEL OVER   X / FIRE for a new duel', SX, SY - 7, ink);
+    rect(SX, SY, W, H, css('--floor')); c.strokeStyle = edge; c.lineWidth = 1; c.strokeRect(SX - .5, SY - .5, W + 1, H + 1);
+    ln(SX + 6, G, SX + W - 6, G, css('--dirt'), 2);
+    const cx = SX + W / 2, k = cx + 56; c.lineCap = 'butt';   /* 선인장 */
+    ln(k, G, k, G - 17, green, 3); ln(k - 1, G - 8, k - 6, G - 8, green, 2); ln(k - 6, G - 8, k - 6, G - 13, green, 2); ln(k + 1, G - 6, k + 5, G - 6, green, 2); ln(k + 5, G - 6, k + 5, G - 11, green, 2);
+    for (let i = 0; i < QD.ROUNDS; i++) { const x = cx - 40 + i * 20, y = SY + 10;
+      if (i >= rounds.length) ring(x, y, 4, edge, 1);
+      else { const o = rounds[i].out; if (o === QD.WIN) dot(x, y, 4, green); else if (o === QD.LOSE) dot(x, y, 4, red); else if (o === QD.SLOWOUT) ring(x, y, 4, red, 2);
+        else { ln(x - 3, y - 3, x + 3.5, y + 3.5, css('--man'), 2); ln(x + 3, y - 3, x - 3.5, y + 3.5, css('--man'), 2); } } }
+    let me = 0, him = 0, meFlash = false, himFlash = false; const flashOn = phase >= 3 && clock - resultAt < .35;
+    if (phase === 2 && (clock - fireAt) * 1000 >= opp) him = 1;
+    if (phase >= 3 && lastR) { if (lastR.out === QD.WIN) { me = 1; meFlash = flashOn; him = 2; } else { him = 1; himFlash = flashOn; me = 2; } }
+    gunman(SX + 48, 1, me, meFlash); gunman(SX + W - 48, -1, him, himFlash);
+    if (phase === 0) badge('READY', soft, SY + 18, SY + 52);
+    else if (phase === 1) badge('WAIT...', soft, SY + 18, SY + 52);
+    else if (phase === 2) badge('FIRE!', red, SY + 18, SY + 52);
+    else if (lastR) {
+      const b = phase === 4 ? (st.wins === QD.ROUNDS ? 'PERFECT!' : `${st.wins}/5 WINS`)
+        : lastR.out === QD.WIN ? 'WIN!' : lastR.out === QD.LOSE ? 'LOSE' : lastR.out === QD.SLOWOUT ? 'TOO SLOW' : 'FOUL!';
+      badge(b, phase !== 4 && lastR.out === QD.WIN ? green : soft, SY + 16, SY + 46);
+      const s = phase === 4 ? (st.valid ? `AVG ${st.avg} ms   BEST ${st.best} ms` : 'no valid shot')
+        : lastR.out === QD.WIN || lastR.out === QD.LOSE ? `YOU ${lastR.ms} ms  vs  ${lastR.opp} ms`
+        : lastR.out === QD.SLOWOUT ? `over ${QD.SLOW} ms  vs  ${lastR.opp} ms` : lastR.ms < 0 ? 'shot before FIRE!' : `${lastR.ms} ms < ${QD.MIN_HUMAN} ms (guess)`;
+      text(s, SX + W / 2, SY + 58, css('--ink'), 'center');
+    }
+    rect(BTN.x, BTN.y, BTN.w, BTN.h, css(clock - pressedAt < .15 ? '--btn-on' : '--btn'));
+    text('FIRE [X]', BTN.x + 28, BTN.y + 13, ink);
+    if (lastR) text(lastR.out === QD.WIN || lastR.out === QD.LOSE ? `LAST ${lastR.ms} ms${newBest ? '   NEW BEST!' : ''}` : lastR.out === QD.SLOWOUT ? 'LAST too slow' : 'LAST foul',
+      BTN.x + BTN.w + 12, BTN.y + 13, ink);
+  };
+  if (still) { rounds = [{ ms: 247, opp: 425, out: QD.WIN }, { ms: 263, opp: 371, out: QD.WIN }]; phase = 3; resultAt = -1; draw(); return; }
+  const loop = ts => {
+    if (last !== null) { const dt = Math.min((ts - last) / 1000, .1); clock += dt; tick(); }
+    last = ts; draw(); requestAnimationFrame(loop);
+  };
+  requestAnimationFrame(loop);
+})();
+
+const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
+if (isMobile) document.getElementById('mobile').classList.add('show');
+
+const toast = msg => { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1800); };
+const copyLink = async () => {
+  try { await navigator.clipboard.writeText(location.href); toast('링크를 복사했어요. PC 카톡에 붙여넣으세요'); }
+  catch (e) { prompt('아래 링크를 복사하세요', location.href); }
+};
+document.getElementById('copy').onclick = copyLink;
+document.getElementById('copymail').onclick = async e => {
+  e.preventDefault();
+  try { await navigator.clipboard.writeText(CONFIG.email); toast('메일 주소를 복사했어요'); }
+  catch (err) { prompt('아래 주소를 복사하세요', CONFIG.email); }
+};
+document.getElementById('share').onclick = async () => {
+  if (navigator.share) {
+    try { await navigator.share({ title: '회사 몰래 미니게임 9탄 · 결투', text: 'PC에서 열어서 받기', url: location.href }); } catch (e) {}
+  } else copyLink();
+};
+</script>
+</body>
+</html>
